@@ -1,0 +1,10 @@
+/.vs/
+/.plastic/
+/.vscode/
+/.vsconfig
+/Assembly-CSharp.csproj
+/ignore.conf
+/UserSettings/
+/Logs/
+/Library/
+/Temp/
