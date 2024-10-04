@@ -42,14 +42,6 @@ public class Player : MonoBehaviour
 
         _rigid.AddForce(thrustDirection * thrust * thrustForce);
         transform.Rotate(Vector3.forward, -rotation * rotationSpeed);
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            // Use the Pooler to spawn bullets
-            bullet = Pooler.Spawn(bulletPrefab, gun.transform.position, UnityEngine.Quaternion.identity);
-            // Initialize the bullet's movement direction
-            Bullet bulletScript = bullet.GetComponent<Bullet>();
-            bulletScript.Initialize(transform.right);
-        }
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -77,7 +69,6 @@ public class Player : MonoBehaviour
                     Destroy(collision.gameObject);
                     SCORE = 0;
                     hp = 3;
-                    Pooler.ClearPools();
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                     break;
             }
