@@ -4,78 +4,79 @@ using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 public class Player : MonoBehaviour
 {
-    public float thrustForce = 2000f;
-    public float rotationSpeed = 1200f;
-    public GameObject gun, bulletPrefab, bullet;
+    private Rigidbody2D rigid;
+    [Header("Movimiento")]
+    private float movimientoHorizontal = 0f;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float suavizadoDeMovimiento;
+    private Vector3 velocidad = Vector3.zero;
+    private bool mirandoDerecha = true;
 
-    private Rigidbody _rigid;
-    private int hp = 3;
-    public static int SCORE = 0;
-    private Vector3 originalPos;
-    public static float yBorderLimit, xBorderLimit;
+    [Header("Salto")]
+    [SerializeField] private float fuerzaDeSalto;
+    [SerializeField] private LayerMask queEsSuelo;
+    [SerializeField] private Transform controladorSuelo;
+    [SerializeField] private Vector3 dimensionesCaja;
+    [SerializeField] private bool enSuelo;
+    private bool salto = false;
     // Start is called before the first frame update
     void Start()
     {
-        _rigid = GetComponent<Rigidbody>();
-        originalPos = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
-        yBorderLimit = Camera.main.orthographicSize;
-        xBorderLimit = (Camera.main.orthographicSize) * Screen.width / Screen.height;
+        rigid = GetComponent<Rigidbody2D>();
     }
     
     // Update is called once per frame
     void Update()
     {
-        var newPos = transform.position;
-        if(newPos.x > xBorderLimit) newPos.x = -xBorderLimit;
-        else if(newPos.x < -xBorderLimit) newPos.x = xBorderLimit;
-        if(newPos.y > yBorderLimit) newPos.y = -yBorderLimit;
-        else if(newPos.y < -yBorderLimit) newPos.y = yBorderLimit;
-        transform.position = newPos;
+        movimientoHorizontal = Input.GetAxisRaw("Horizontal") * moveSpeed;
 
-        float rotation = Input.GetAxis("Horizontal") * Time.deltaTime;
-        float thrust = Input.GetAxis("Vertical") * Time.deltaTime;
-        Vector3 thrustDirection = transform.right;
-
-        _rigid.AddForce(thrustDirection * thrust * thrustForce);
-        transform.Rotate(Vector3.forward, -rotation * rotationSpeed);
+        if(Input.GetButtonDown("Jump")){
+            salto = true;
+        }
+       
     }
 
-    private void OnTriggerEnter(Collider collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            hp--;
-            switch (hp)
-            {
-                case 2:
-                    GetComponent<Rigidbody>().velocity = Vector3.zero;
-                    gameObject.transform.position = originalPos;
-                    Destroy(collision.gameObject);
-                    Destroy(GameObject.FindGameObjectWithTag("HP2"));
-                    break;
-                case 1:
-                    GetComponent<Rigidbody>().velocity = Vector3.zero;
-                    gameObject.transform.position = originalPos;
-                    Destroy(GameObject.FindGameObjectWithTag("HP2"));
-                    Destroy(GameObject.FindGameObjectWithTag("HP1"));
-                    Destroy(collision.gameObject);
-                    break;
-                case 0:
-                    GetComponent<Rigidbody>().velocity = Vector3.zero;
-                    Destroy(collision.gameObject);
-                    SCORE = 0;
-                    hp = 3;
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                    break;
-            }
+    void FixedUpdate(){
+        enSuelo = Physics2D.OverlapBox(controladorSuelo.position, dimensionesCaja, 0f, queEsSuelo);
+        //Mover
+        Mover(movimientoHorizontal * Time.fixedDeltaTime, salto);
+
+        salto=false;
+    }
+
+    private void Mover(float mover, bool saltar){
+        Vector3 velocidadObjeto = new Vector2(mover, rigid.velocity.y);
+        rigid.velocity = Vector3.SmoothDamp(rigid.velocity, velocidadObjeto, ref velocidad, suavizadoDeMovimiento);
+
+        if(mover > 0 && !mirandoDerecha){
+            //Girar personaje
+            Girar();
         }
-        else
-        {
-            Debug.Log("He colisionado con otro objeto");
+        else if(mover < 0 && mirandoDerecha){
+            //Girar personaje
+            Girar();
         }
+
+        if(enSuelo && saltar){
+            enSuelo = false;
+            rigid.AddForce(new Vector2(0f, fuerzaDeSalto));
+        }
+    }
+
+    private void Girar(){
+        mirandoDerecha = !mirandoDerecha; //Cambiamos al valor contrario del actual. Si mirandoDerecha -> false; Si !mirandoDerecha -> true.
+        Vector3 escala = transform.localScale; //Cogemos la escala del personaje
+        escala.x *= -1; //Hacemos que gire a la direccion contraria
+        transform.localScale = escala; //Actualizamos la escala del pj a la nueva
+    }
+
+    private void OnDrawGizmos(){
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(controladorSuelo.position, dimensionesCaja);
     }
 }
