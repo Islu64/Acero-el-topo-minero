@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
+using System.Collections.Generic;  // Para usar el diccionario
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Vector2 = UnityEngine.Vector2;
-using Vector3 = UnityEngine.Vector3;
+using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rigid;
+
     [Header("Movimiento")]
     private float movimientoHorizontal = 0f;
     [SerializeField] private float moveSpeed;
@@ -24,58 +20,133 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector3 dimensionesCaja;
     [SerializeField] private bool enSuelo;
     private bool salto = false;
+
+    [Header("Cavar")]
+    [SerializeField] private float distanciaCavar = 1.0f;  // Distancia del raycast para cavar
+    [SerializeField] private LayerMask capaDeBloques;  // Para identificar los bloques de suelo
+    private Tilemap tilemap;
+
+    // Diccionario para almacenar la vida de cada tile
+    private Dictionary<Vector3Int, int> tileHealthMap = new Dictionary<Vector3Int, int>();
+    private int maxHealthPerTile = 2;  // Salud máxima para cada tile
+
     // Start is called before the first frame update
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
+        tilemap = FindObjectOfType<Tilemap>();  // Encuentra el Tilemap en la escena
     }
-    
+
     // Update is called once per frame
     void Update()
     {
         movimientoHorizontal = Input.GetAxisRaw("Horizontal") * moveSpeed;
 
-        if(Input.GetButtonDown("Jump")){
+        if (Input.GetButtonDown("Jump"))
+        {
             salto = true;
         }
-       
+
+        // Detección para cavar
+        if (Input.GetKeyDown(KeyCode.Z))  // Puedes cambiar Z por la tecla que prefieras
+        {
+            Cavar();
+        }
     }
 
-    void FixedUpdate(){
+    void FixedUpdate()
+    {
         enSuelo = Physics2D.OverlapBox(controladorSuelo.position, dimensionesCaja, 0f, queEsSuelo);
-        //Mover
         Mover(movimientoHorizontal * Time.fixedDeltaTime, salto);
-
-        salto=false;
+        salto = false;
     }
 
-    private void Mover(float mover, bool saltar){
+    private void Mover(float mover, bool saltar)
+    {
         Vector3 velocidadObjeto = new Vector2(mover, rigid.velocity.y);
         rigid.velocity = Vector3.SmoothDamp(rigid.velocity, velocidadObjeto, ref velocidad, suavizadoDeMovimiento);
 
-        if(mover > 0 && !mirandoDerecha){
-            //Girar personaje
+        if (mover > 0 && !mirandoDerecha)
+        {
             Girar();
         }
-        else if(mover < 0 && mirandoDerecha){
-            //Girar personaje
+        else if (mover < 0 && mirandoDerecha)
+        {
             Girar();
         }
 
-        if(enSuelo && saltar){
+        if (enSuelo && saltar)
+        {
             enSuelo = false;
             rigid.AddForce(new Vector2(0f, fuerzaDeSalto));
         }
     }
 
-    private void Girar(){
-        mirandoDerecha = !mirandoDerecha; //Cambiamos al valor contrario del actual. Si mirandoDerecha -> false; Si !mirandoDerecha -> true.
-        Vector3 escala = transform.localScale; //Cogemos la escala del personaje
-        escala.x *= -1; //Hacemos que gire a la direccion contraria
-        transform.localScale = escala; //Actualizamos la escala del pj a la nueva
+    private void Girar()
+    {
+        mirandoDerecha = !mirandoDerecha;
+        Vector3 escala = transform.localScale;
+        escala.x *= -1;
+        transform.localScale = escala;
     }
 
-    private void OnDrawGizmos(){
+    // Función para cavar y dañar los tiles
+// Función para cavar
+private void Cavar()
+{
+    Vector2 direccion = Vector2.zero;
+
+    // Determinamos la dirección de cavar basándonos en las teclas presionadas
+    if (Input.GetKey(KeyCode.UpArrow))
+    {
+        direccion = Vector2.up; // Cavar hacia arriba
+    }
+    else if (Input.GetKey(KeyCode.DownArrow))
+    {
+        direccion = Vector2.down; // Cavar hacia abajo
+    }
+    else if (Input.GetKey(KeyCode.LeftArrow))
+    {
+        direccion = Vector2.left; // Cavar hacia la izquierda
+    }
+    else if (Input.GetKey(KeyCode.RightArrow))
+    {
+        direccion = Vector2.right; // Cavar hacia la derecha
+    }
+
+    // Solo si hay una dirección asignada
+    if (direccion != Vector2.zero)
+    {
+        // Visualización del raycast para depuración
+        Debug.DrawRay(transform.position, direccion * distanciaCavar, Color.red, 0.5f); 
+
+        // Lanzamos el raycast desde el centro del jugador en la dirección especificada
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direccion, distanciaCavar, capaDeBloques);
+
+        // Si golpeamos algo
+        if (hit.collider != null)
+        {
+            // Ajuste: agregamos un pequeño desplazamiento para asegurarnos de que la posición está en la celda correcta
+            Vector3 hitPosition = hit.point + (Vector2)(direccion * 0.01f); 
+
+            // Convertimos la posición del golpe a coordenadas de celda en el tilemap
+            Vector3Int cellPosition = tilemap.WorldToCell(hitPosition);
+
+            // Verificamos si la celda tiene un tile (bloque)
+            if (tilemap.HasTile(cellPosition))
+            {
+                // Eliminamos el tile (romper el bloque)
+                tilemap.SetTile(cellPosition, null);
+            }
+        }
+    }
+}
+
+
+
+
+    private void OnDrawGizmos()
+    {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(controladorSuelo.position, dimensionesCaja);
     }
