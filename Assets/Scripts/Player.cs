@@ -1,4 +1,5 @@
 using System.Collections.Generic;  // Para usar el diccionario
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -26,15 +27,25 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask capaDeBloques;  // Para identificar los bloques de suelo
     private Tilemap tilemap;
 
+    // Sprite del pico
+    [Header("Pico")]
+    [SerializeField] private SpriteRenderer picoSprite;  // Asignar el objeto con el sprite del pico
+    [SerializeField] private float tiempoMostrarPico = 0.5f;  // Tiempo que el pico será visible
+
     // Diccionario para almacenar la vida de cada tile
     private Dictionary<Vector3Int, int> tileHealthMap = new Dictionary<Vector3Int, int>();
     private int maxHealthPerTile = 2;  // Salud máxima para cada tile
+
+    private Coroutine picoCoroutine;  // Para controlar el tiempo que el pico aparece
 
     // Start is called before the first frame update
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
         tilemap = FindObjectOfType<Tilemap>();  // Encuentra el Tilemap en la escena
+
+        // Asegurarse de que el sprite del pico esté oculto al inicio
+        picoSprite.enabled = false;
     }
 
     // Update is called once per frame
@@ -90,60 +101,75 @@ public class Player : MonoBehaviour
         transform.localScale = escala;
     }
 
-    // Función para cavar y dañar los tiles
-// Función para cavar
-private void Cavar()
-{
-    Vector2 direccion = Vector2.zero;
+    private void Cavar()
+    {
+        Vector2 direccion = Vector2.zero;
 
-    // Determinamos la dirección de cavar basándonos en las teclas presionadas
-    if (Input.GetKey(KeyCode.UpArrow))
-    {
-        direccion = Vector2.up; // Cavar hacia arriba
-    }
-    else if (Input.GetKey(KeyCode.DownArrow))
-    {
-        direccion = Vector2.down; // Cavar hacia abajo
-    }
-    else if (Input.GetKey(KeyCode.LeftArrow))
-    {
-        direccion = Vector2.left; // Cavar hacia la izquierda
-    }
-    else if (Input.GetKey(KeyCode.RightArrow))
-    {
-        direccion = Vector2.right; // Cavar hacia la derecha
-    }
-
-    // Solo si hay una dirección asignada
-    if (direccion != Vector2.zero)
-    {
-        // Visualización del raycast para depuración
-        Debug.DrawRay(transform.position, direccion * distanciaCavar, Color.red, 0.5f); 
-
-        // Lanzamos el raycast desde el centro del jugador en la dirección especificada
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direccion, distanciaCavar, capaDeBloques);
-
-        // Si golpeamos algo
-        if (hit.collider != null)
+        // Determinamos la dirección de cavar basándonos en las teclas presionadas
+        if (Input.GetKey(KeyCode.UpArrow))
         {
-            // Ajuste: agregamos un pequeño desplazamiento para asegurarnos de que la posición está en la celda correcta
-            Vector3 hitPosition = hit.point + (Vector2)(direccion * 0.01f); 
+            direccion = Vector2.up; // Cavar hacia arriba
+        }
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            direccion = Vector2.down; // Cavar hacia abajo
+        }
+        else if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            direccion = Vector2.left; // Cavar hacia la izquierda
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            direccion = Vector2.right; // Cavar hacia la derecha
+        }
 
-            // Convertimos la posición del golpe a coordenadas de celda en el tilemap
-            Vector3Int cellPosition = tilemap.WorldToCell(hitPosition);
+        // Solo si hay una dirección asignada
+        if (direccion != Vector2.zero)
+        {
+            // Visualización del raycast para depuración
+            Debug.DrawRay(transform.position, direccion * distanciaCavar, Color.red, 0.5f);
 
-            // Verificamos si la celda tiene un tile (bloque)
-            if (tilemap.HasTile(cellPosition))
+            // Lanzamos el raycast desde el centro del jugador en la dirección especificada
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, direccion, distanciaCavar, capaDeBloques);
+
+            // Si golpeamos algo
+            if (hit.collider != null)
             {
-                // Eliminamos el tile (romper el bloque)
-                tilemap.SetTile(cellPosition, null);
+                // Ajuste: agregamos un pequeño desplazamiento para asegurarnos de que la posición está en la celda correcta
+                Vector3 hitPosition = hit.point + (Vector2)(direccion * 0.01f);
+
+                // Convertimos la posición del golpe a coordenadas de celda en el tilemap
+                Vector3Int cellPosition = tilemap.WorldToCell(hitPosition);
+
+                // Verificamos si la celda tiene un tile (bloque)
+                if (tilemap.HasTile(cellPosition))
+                {
+                    // Mostrar el pico en la posición adecuada
+                    StartCoroutine(MostrarPico(direccion));
+
+                    // Eliminamos el tile (romper el bloque)
+                    tilemap.SetTile(cellPosition, null);
+                }
             }
         }
     }
-}
 
+    // Coroutine para mostrar el pico temporalmente
+    private IEnumerator MostrarPico(Vector2 direccion)
+    {
+        // Colocamos el sprite del pico en la dirección de cavar
+        Vector3 posicionPico = transform.position + (Vector3)direccion * 0.5f; // Ajustar la distancia del sprite respecto al topo
+        picoSprite.transform.position = posicionPico;
 
+        // Mostramos el sprite del pico
+        picoSprite.enabled = true;
 
+        // Esperar un tiempo antes de ocultarlo
+        yield return new WaitForSeconds(tiempoMostrarPico);
+
+        // Ocultamos el sprite del pico
+        picoSprite.enabled = false;
+    }
 
     private void OnDrawGizmos()
     {
