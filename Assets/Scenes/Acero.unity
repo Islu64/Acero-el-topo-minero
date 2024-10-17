@@ -772,7 +772,7 @@ TilemapCollider2D:
   m_GameObject: {fileID: 402295561}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: d8bff9819857a284c90c54187fb8e50e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -853,7 +853,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 456252221}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: d8bff9819857a284c90c54187fb8e50e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -993,9 +993,9 @@ MonoBehaviour:
   fuerzaDeSalto: 400
   queEsSuelo:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 192
   controladorSuelo: {fileID: 1603385859}
-  dimensionesCaja: {x: 1, y: 0.25, z: 0}
+  dimensionesCaja: {x: 0.77, y: 0.15, z: 0}
   enSuelo: 0
   distanciaCavar: 1
   capaDeBloques:
@@ -1089,7 +1089,7 @@ Transform:
   m_GameObject: {fileID: 890934757}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.8, y: -3.52, z: 0}
+  m_LocalPosition: {x: 1.804, y: -3.54, z: 0}
   m_LocalScale: {x: -0.1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1105,7 +1105,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 890934757}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: d8bff9819857a284c90c54187fb8e50e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1275,7 +1275,7 @@ Transform:
   m_GameObject: {fileID: 1603385858}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.16, z: 0}
+  m_LocalPosition: {x: 0.31, y: -4.21, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1368,7 +1368,7 @@ Transform:
   m_GameObject: {fileID: 1740986740}
   serializedVersion: 2
   m_LocalRotation: {x: 0.050976634, y: 0.0059922957, z: -0.00030566947, w: 0.9986819}
-  m_LocalPosition: {x: 1.6824559, y: -1.009571, z: -9.794587}
+  m_LocalPosition: {x: 1.6864558, y: -1.0295708, z: -9.794586}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1473,7 +1473,7 @@ Transform:
   m_GameObject: {fileID: 1780405207}
   serializedVersion: 2
   m_LocalRotation: {x: 0.050976634, y: 0.0059922957, z: -0.00030566947, w: 0.9986819}
-  m_LocalPosition: {x: 1.6824559, y: -1.009571, z: -9.794587}
+  m_LocalPosition: {x: 1.6864558, y: -1.0295708, z: -9.794586}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
