@@ -2012,7 +2012,11 @@ GameObject:
   - component: {fileID: 1469509047}
   m_Layer: 4
   m_Name: 13597
+<<<<<<< HEAD
   m_TagString: Enemy
+=======
+  m_TagString: enemy
+>>>>>>> 00cbef86a0144ba39281aa14d880fed1b7bb20df
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
