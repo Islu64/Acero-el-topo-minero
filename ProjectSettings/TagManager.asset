@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
+  - HP0
+  - HP1
+  - HP2
   layers:
   - Default
   - TransparentFX
