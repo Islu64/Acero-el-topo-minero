@@ -135,21 +135,29 @@ public class Player : MonoBehaviour
             // Si golpeamos algo
             if (hit.collider != null)
             {
-                // Ajuste: agregamos un pequeño desplazamiento para asegurarnos de que la posición está en la celda correcta
-                Vector3 hitPosition = hit.point + (Vector2)(direccion * 0.01f);
-
-                // Convertimos la posición del golpe a coordenadas de celda en el tilemap
-                Vector3Int cellPosition = tilemap.WorldToCell(hitPosition);
-
-                // Verificamos si la celda tiene un tile (bloque)
-                if (tilemap.HasTile(cellPosition))
-                {
-                    // Mostrar el pico en la posición adecuada
-                    StartCoroutine(MostrarPico(direccion));
-
-                    // Eliminamos el tile (romper el bloque)
-                    tilemap.SetTile(cellPosition, null);
+                if (hit.collider.gameObject.tag == "enemy") {
+                    Destroy(hit.collider.gameObject);
                 }
+
+                else {
+                    // Ajuste: agregamos un pequeño desplazamiento para asegurarnos de que la posición está en la celda correcta
+                    Vector3 hitPosition = hit.point + (Vector2)(direccion * 0.01f);
+
+                    // Convertimos la posición del golpe a coordenadas de celda en el tilemap
+                    Vector3Int cellPosition = tilemap.WorldToCell(hitPosition);
+
+                    // Verificamos si la celda tiene un tile (bloque)
+                    if (tilemap.HasTile(cellPosition))
+                    {
+                        // Mostrar el pico en la posición adecuada
+                        StartCoroutine(MostrarPico(direccion));
+
+                        // Eliminamos el tile (romper el bloque)
+                        tilemap.SetTile(cellPosition, null);
+                    }
+                }
+
+
             }
         }
     }
