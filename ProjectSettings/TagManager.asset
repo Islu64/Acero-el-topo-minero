@@ -8,6 +8,7 @@ TagManager:
   - HP0
   - HP1
   - HP2
+  - enemy
   layers:
   - Default
   - TransparentFX
