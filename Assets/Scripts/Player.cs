@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-
+using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rigid;
 
     [Header("Movimiento")]
     private float movimientoHorizontal = 0f;
+    private int hp = 3;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float suavizadoDeMovimiento;
     private Vector3 velocidad = Vector3.zero;
@@ -242,7 +243,28 @@ private void ClearHighlight()
         yield return new WaitForSeconds(tiempoMostrarPico);
         picoSprite.enabled = false;
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Debug.Log("Colisionado");
+            hp--;
+            switch (hp)
+            {
+                case 2:
+                    Destroy(GameObject.FindGameObjectWithTag("HP2"));
+                    break;
+                case 1:
+                    Destroy(GameObject.FindGameObjectWithTag("HP1"));
+                    break;
+                case 0: Destroy(GameObject.FindGameObjectWithTag("HP0"));
+                        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                        break;
 
+            }
+        }
+
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
