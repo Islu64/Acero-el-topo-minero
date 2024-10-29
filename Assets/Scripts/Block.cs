@@ -2,15 +2,39 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    public int health = 2; // Cada bloque puede recibir 2 golpes antes de romperse
+    public int health = 2;
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
+    public Color highlightColor = Color.yellow;  // Color para resaltar
 
-    // Llamamos a esta función cuando el jugador golpea el bloque
+    private void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color; // Guardamos el color original
+    }
+
     public void TakeDamage()
     {
-        health--; // Restamos un golpe
+        health--;
         if (health <= 0)
         {
-            Destroy(gameObject); // Si la vida llega a 0, destruimos el bloque
+            Destroy(gameObject);
+        }
+    }
+
+    public void Highlight()
+    {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = highlightColor;
+        }
+    }
+
+    public void ClearHighlight()
+    {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = originalColor;
         }
     }
 }
