@@ -9,6 +9,7 @@ TagManager:
   - HP1
   - HP2
   - enemy
+  - Coin
   layers:
   - Default
   - TransparentFX

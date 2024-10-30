@@ -6,7 +6,9 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rigid;
-
+    public static int Monedas = 0;
+    private bool invencible = false;
+    [SerializeField] private float secsInvencible;
     [Header("Movimiento")]
     private float movimientoHorizontal = 0f;
     private int hp = 3;
@@ -245,9 +247,8 @@ private void ClearHighlight()
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") && !invencible)
         {
-            Debug.Log("Colisionado");
             hp--;
             switch (hp)
             {
@@ -258,12 +259,22 @@ private void ClearHighlight()
                     Destroy(GameObject.FindGameObjectWithTag("HP1"));
                     break;
                 case 0: Destroy(GameObject.FindGameObjectWithTag("HP0"));
+                        Monedas = 0;
                         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                         break;
 
             }
+            StartCoroutine(InvencibilidadTemporal());
+        }else {
+            return;
         }
 
+    }
+
+    private IEnumerator InvencibilidadTemporal(){
+        invencible = true;
+        yield return new WaitForSeconds(secsInvencible);
+        invencible = false;
     }
     private void OnDrawGizmos()
     {
