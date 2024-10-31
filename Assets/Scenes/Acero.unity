@@ -1921,7 +1921,7 @@ MonoBehaviour:
     m_Bits: 208
   picoSprite: {fileID: 1491778672}
   tiempoMostrarPico: 0.5
-  frecuenciaParpadeo: 1
+  frecuenciaParpadeo: 0.2
 --- !u!50 &890934760
 Rigidbody2D:
   serializedVersion: 4
@@ -2073,7 +2073,7 @@ PolygonCollider2D:
       - {x: -3.5643375, y: 0.6639376}
       - {x: -3.6499999, y: -2.4199998}
       - {x: -3.6499999, y: -3.59}
-      - {x: -3.62, y: -4.8199997}
+      - {x: -3.663559, y: -4.5151005}
       - {x: 4.22, y: -4.8199997}
       - {x: 4.8199997, y: -1.54}
       - {x: 4.8199997, y: 1.25}
