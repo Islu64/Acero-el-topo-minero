@@ -209,7 +209,7 @@ private void ClearHighlight()
 
             if (hit.collider != null)
             {
-                if (hit.collider.gameObject.tag == "enemy") {
+                if (hit.collider.gameObject.tag == "Enemy") {
                     Destroy(hit.collider.gameObject);
                 }
 
@@ -265,7 +265,9 @@ private void ClearHighlight()
 
             }
             StartCoroutine(InvencibilidadTemporal());
-        }else {
+            StartCoroutine(ParpadeoInvencible()); // Inicia el parpadeo
+        }
+        else {
             return;
         }
 
@@ -275,6 +277,19 @@ private void ClearHighlight()
         invencible = true;
         yield return new WaitForSeconds(secsInvencible);
         invencible = false;
+    }
+
+    [SerializeField] private float frecuenciaParpadeo = 0.2f; // Frecuencia en segundos del parpadeo
+
+    private IEnumerator ParpadeoInvencible()
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>(); // Asumimos que el SpriteRenderer está en el mismo objeto
+        while (invencible)
+        {
+            spriteRenderer.enabled = !spriteRenderer.enabled; // Cambia el estado del sprite
+            yield return new WaitForSeconds(frecuenciaParpadeo); // Espera el tiempo de parpadeo
+        }
+        spriteRenderer.enabled = true; // Asegúrate de que el sprite esté visible al finalizar el parpadeo
     }
     private void OnDrawGizmos()
     {

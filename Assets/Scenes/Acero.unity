@@ -1921,6 +1921,7 @@ MonoBehaviour:
     m_Bits: 208
   picoSprite: {fileID: 1491778672}
   tiempoMostrarPico: 0.5
+  frecuenciaParpadeo: 1
 --- !u!50 &890934760
 Rigidbody2D:
   serializedVersion: 4
