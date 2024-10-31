@@ -209,7 +209,7 @@ private void ClearHighlight()
 
             if (hit.collider != null)
             {
-                if (hit.collider.gameObject.tag == "enemy") {
+                if (hit.collider.gameObject.tag == "Enemy") {
                     Destroy(hit.collider.gameObject);
                 }
 
