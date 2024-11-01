@@ -35,6 +35,12 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer picoSprite;  // Asignar el objeto con el sprite del pico
     [SerializeField] private float tiempoMostrarPico = 0.5f;
 
+    [SerializeField] private float runSpeedMultiplier = 300f; // Multiplicador adicional al correr
+    [SerializeField] private float timeToMaxRunSpeed = 0.0001f; // Tiempo para alcanzar velocidad máxima
+    private float runTimer = 0f; // Temporizador de carrera
+    private bool isRunning = false; // Indica si el personaje está corriendo
+
+
     private Dictionary<Vector3Int, int> tileHealthMap = new Dictionary<Vector3Int, int>();
     private Coroutine picoCoroutine;
 
@@ -54,7 +60,18 @@ public class Player : MonoBehaviour
             salto = true;
         }
 
-        // Detectar dirección de la flecha y resaltar bloque
+        // Verifica si el botón de correr está presionado y el personaje se está moviendo
+        if (Input.GetKey(KeyCode.X) && Mathf.Abs(movimientoHorizontal) > 0)
+        {
+            isRunning = true;
+            runTimer += Time.deltaTime; // Incrementa el temporizador para acelerar
+        }
+        else
+        {
+            isRunning = false;
+            runTimer = 0f; // Reinicia el temporizador si no se está corriendo
+        }
+
         HighlightBlock();
 
         if (Input.GetKeyDown(KeyCode.Z))
@@ -66,12 +83,29 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         enSuelo = Physics2D.OverlapBox(controladorSuelo.position, dimensionesCaja, 0f, queEsSuelo);
+        if (enSuelo && !salto)
+        {
+            rigid.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+        }
+        else
+        {
+            rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+
+
         Mover(movimientoHorizontal * Time.fixedDeltaTime, salto);
         salto = false;
     }
 
     private void Mover(float mover, bool saltar)
     {
+        // Aplica un multiplicador de velocidad solo si el personaje está corriendo
+        if (isRunning)
+        {
+            float incrementoVelocidad = Mathf.Lerp(1f, runSpeedMultiplier, runTimer / timeToMaxRunSpeed);
+            mover *= incrementoVelocidad;
+        }
+
         Vector3 velocidadObjeto = new Vector2(mover, rigid.velocity.y);
         rigid.velocity = Vector3.SmoothDamp(rigid.velocity, velocidadObjeto, ref velocidad, suavizadoDeMovimiento);
 
