@@ -1886,6 +1886,7 @@ GameObject:
   - component: {fileID: 890934760}
   - component: {fileID: 890934758}
   - component: {fileID: 890934763}
+  - component: {fileID: 890934764}
   m_Layer: 0
   m_Name: Acero
   m_TagString: Player
@@ -2012,7 +2013,7 @@ Transform:
   m_GameObject: {fileID: 890934757}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.804, y: 1, z: 0}
+  m_LocalPosition: {x: 1.804, y: -4.18, z: 0}
   m_LocalScale: {x: -0.1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2026,7 +2027,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 890934757}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 6200000, guid: d8bff9819857a284c90c54187fb8e50e, type: 2}
   m_IncludeLayers:
@@ -2080,6 +2081,41 @@ PolygonCollider2D:
       - {x: 4.8199997, y: -1.54}
       - {x: 4.8199997, y: 1.25}
   m_UseDelaunayMesh: 0
+--- !u!58 &890934764
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890934757}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: d8bff9819857a284c90c54187fb8e50e, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.35035223, y: -0.3445953}
+  serializedVersion: 2
+  m_Radius: 4.437477
 --- !u!1 &957812413
 GameObject:
   m_ObjectHideFlags: 0
@@ -2901,7 +2937,7 @@ Transform:
   m_GameObject: {fileID: 1740986740}
   serializedVersion: 2
   m_LocalRotation: {x: 0.050976634, y: 0.0059922957, z: -0.00030566947, w: 0.9986819}
-  m_LocalPosition: {x: 1.686456, y: 3.5104291, z: -9.794586}
+  m_LocalPosition: {x: 1.6864558, y: -1.6695709, z: -9.794586}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3010,7 +3046,7 @@ Transform:
   m_GameObject: {fileID: 1780405207}
   serializedVersion: 2
   m_LocalRotation: {x: 0.050976634, y: 0.0059922957, z: -0.00030566947, w: 0.9986819}
-  m_LocalPosition: {x: 1.686456, y: 3.5104291, z: -9.794586}
+  m_LocalPosition: {x: 1.6864558, y: -1.6695709, z: -9.794586}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
