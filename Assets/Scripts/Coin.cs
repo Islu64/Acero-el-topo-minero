@@ -8,7 +8,7 @@ public class Coin : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            CoinManager.instance.AddCoin();
+            CoinManager.instance.AddCoin(1);
             Destroy(gameObject);  // Destruye la moneda para simular que se ha recogido
         }
     }

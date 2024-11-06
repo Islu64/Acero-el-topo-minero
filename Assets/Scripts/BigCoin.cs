@@ -8,11 +8,7 @@ public class BigCoin : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            int i = 0;
-            while (i < 20) { 
-            CoinManager.instance.AddCoin();
-                i++;
-            }
+            CoinManager.instance.AddCoin(20);
             Destroy(gameObject);  // Destruye la moneda para simular que se ha recogido
         }
     }
