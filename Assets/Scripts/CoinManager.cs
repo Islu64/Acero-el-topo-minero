@@ -17,9 +17,9 @@ public class CoinManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    public void AddCoin()
+    public void AddCoin(int cantCoins)
     {
-        Player.Monedas++;
+        Player.Monedas += cantCoins;
         UpdateCoinText();
     }
 
