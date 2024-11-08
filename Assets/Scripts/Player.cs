@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.SceneManagement;
+
+
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rigid;
@@ -12,7 +14,7 @@ public class Player : MonoBehaviour
     [Header("Movimiento")]
     private float movimientoHorizontal = 0f;
     private int hp = 3;
-    [SerializeField] private float moveSpeed;
+    [SerializeField] public float moveSpeed;
     [SerializeField] private float suavizadoDeMovimiento;
     private Vector3 velocidad = Vector3.zero;
     private bool mirandoDerecha = true;
@@ -23,7 +25,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform controladorSuelo;
     [SerializeField] private Vector3 dimensionesCaja;
     [SerializeField] private bool enSuelo;
-    private bool salto = false;
+    public bool salto = false;
 
     [Header("Cavar")]
     [SerializeField] private float distanciaCavar = 1.0f;  // Distancia del raycast para cavar
@@ -41,7 +43,6 @@ public class Player : MonoBehaviour
     private bool isRunning = false; // Indica si el personaje está corriendo
 
 
-    private Dictionary<Vector3Int, int> tileHealthMap = new Dictionary<Vector3Int, int>();
     private Coroutine picoCoroutine;
 
     void Start()
@@ -51,7 +52,7 @@ public class Player : MonoBehaviour
         picoSprite.enabled = false;
     }
 
-    void Update()
+    public void Update()
     {
         movimientoHorizontal = Input.GetAxisRaw("Horizontal") * moveSpeed;
 
