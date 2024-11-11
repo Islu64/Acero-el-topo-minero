@@ -7,40 +7,40 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    private Rigidbody2D rigid;
+    public Rigidbody2D rigid;
     public static int Monedas = 0;
-    private bool invencible = false;
+    public bool invencible = false;
     [SerializeField] private float secsInvencible;
     [Header("Movimiento")]
-    private float movimientoHorizontal = 0f;
-    private int hp = 3;
+    public float movimientoHorizontal = 0f;
+    public int hp = 3;
     [SerializeField] public float moveSpeed;
-    [SerializeField] private float suavizadoDeMovimiento;
-    private Vector3 velocidad = Vector3.zero;
-    private bool mirandoDerecha = true;
+    [SerializeField] public float suavizadoDeMovimiento;
+    public Vector3 velocidad = Vector3.zero;
+    public bool mirandoDerecha = true;
 
     [Header("Salto")]
-    [SerializeField] private float fuerzaDeSalto;
+    [SerializeField] public float fuerzaDeSalto;
     [SerializeField] private LayerMask queEsSuelo;
     [SerializeField] private Transform controladorSuelo;
     [SerializeField] private Vector3 dimensionesCaja;
-    [SerializeField] private bool enSuelo;
+    [SerializeField] public bool enSuelo;
     public bool salto = false;
 
     [Header("Cavar")]
     [SerializeField] private float distanciaCavar = 1.0f;  // Distancia del raycast para cavar
     [SerializeField] private LayerMask capaDeBloques;  // Para identificar los bloques de suelo
-    private Tilemap tilemap;
+    public Tilemap tilemap;
     private Vector3Int lastHighlightedCell;  // Para almacenar la última celda iluminada
 
     [Header("Pico")]
     [SerializeField] private SpriteRenderer picoSprite;  // Asignar el objeto con el sprite del pico
     [SerializeField] private float tiempoMostrarPico = 0.5f;
 
-    [SerializeField] private float runSpeedMultiplier = 300f; // Multiplicador adicional al correr
-    [SerializeField] private float timeToMaxRunSpeed = 0.0001f; // Tiempo para alcanzar velocidad máxima
-    private float runTimer = 0f; // Temporizador de carrera
-    private bool isRunning = false; // Indica si el personaje está corriendo
+    [SerializeField] public float runSpeedMultiplier = 300f; // Multiplicador adicional al correr
+    [SerializeField] public float timeToMaxRunSpeed = 0.0001f; // Tiempo para alcanzar velocidad máxima
+    public float runTimer = 0f; // Temporizador de carrera
+    public bool isRunning = false; // Indica si el personaje está corriendo
 
 
     private Coroutine picoCoroutine;
@@ -73,7 +73,26 @@ public class Player : MonoBehaviour
             runTimer = 0f; // Reinicia el temporizador si no se está corriendo
         }
 
-        HighlightBlock();
+        Vector2 direccion = Vector2.zero;
+
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            direccion = Vector2.up;
+        }
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            direccion = Vector2.down;
+        }
+        else if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            direccion = Vector2.left;
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            direccion = Vector2.right;
+        }
+
+        HighlightBlock(direccion);
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -98,7 +117,7 @@ public class Player : MonoBehaviour
         salto = false;
     }
 
-    private void Mover(float mover, bool saltar)
+    public void Mover(float mover, bool saltar)
     {
         // Aplica un multiplicador de velocidad solo si el personaje está corriendo
         if (isRunning)
@@ -126,7 +145,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Girar()
+    public void Girar()
     {
         mirandoDerecha = !mirandoDerecha;
         Vector3 escala = transform.localScale;
@@ -134,72 +153,53 @@ public class Player : MonoBehaviour
         transform.localScale = escala;
     }
 
-private void HighlightBlock()
-{
-    Vector2 direccion = Vector2.zero;
-
-    if (Input.GetKey(KeyCode.UpArrow))
+    public void HighlightBlock(Vector2 direccion)
     {
-        direccion = Vector2.up;
-    }
-    else if (Input.GetKey(KeyCode.DownArrow))
-    {
-        direccion = Vector2.down;
-    }
-    else if (Input.GetKey(KeyCode.LeftArrow))
-    {
-        direccion = Vector2.left;
-    }
-    else if (Input.GetKey(KeyCode.RightArrow))
-    {
-        direccion = Vector2.right;
-    }
-
-    if (direccion != Vector2.zero)
-    {
-        // Calculamos la posición del raycast
-        Vector3 raycastPosition = transform.position + (Vector3)direccion * distanciaCavar;
-        // Convertimos la posición a la celda en el tilemap
-        Vector3Int cellPosition = tilemap.WorldToCell(raycastPosition);
-
-        // Verificamos si la celda tiene un tile
-        if (tilemap.HasTile(cellPosition))
+        if (direccion != Vector2.zero)
         {
-            // Verificamos si es un nuevo bloque para resaltar
-            if (cellPosition != lastHighlightedCell)
+            // Calculamos la posición del raycast
+            Vector3 raycastPosition = transform.position + (Vector3)direccion * distanciaCavar;
+            // Convertimos la posición a la celda en el tilemap
+            Vector3Int cellPosition = tilemap.WorldToCell(raycastPosition);
+
+            // Verificamos si la celda tiene un tile
+            if (tilemap.HasTile(cellPosition))
             {
-                // Limpiamos el último tile resaltado
+                // Verificamos si es un nuevo bloque para resaltar
+                if (cellPosition != lastHighlightedCell)
+                {
+                    // Limpiamos el último tile resaltado
+                    ClearHighlight();
+
+                    // Guardamos la celda actual
+                    lastHighlightedCell = cellPosition;
+
+                    // Cambiamos el color del nuevo tile resaltado a amarillo
+                    tilemap.SetColor(cellPosition, Color.yellow);
+                }
+            }
+            else
+            {
+                // Si no hay tile, limpiamos cualquier resalte anterior
                 ClearHighlight();
-
-                // Guardamos la celda actual
-                lastHighlightedCell = cellPosition;
-
-                // Cambiamos el color del nuevo tile resaltado a amarillo
-                tilemap.SetColor(cellPosition, Color.yellow);
             }
         }
         else
         {
-            // Si no hay tile, limpiamos cualquier resalte anterior
+            // Si no hay dirección seleccionada, limpiamos cualquier resalte
             ClearHighlight();
         }
-    }
-    else
-    {
-        // Si no hay dirección seleccionada, limpiamos cualquier resalte
-        ClearHighlight();
-    }
 }
 
-private void ClearHighlight()
-{
-    if (lastHighlightedCell != Vector3Int.zero)
+    private void ClearHighlight()
     {
-        // Restauramos el color original del último tile resaltado
-        tilemap.SetColor(lastHighlightedCell, Color.white);  // Puedes cambiar "Color.white" por el color original de los tiles
-        lastHighlightedCell = Vector3Int.zero;
+        if (lastHighlightedCell != Vector3Int.zero)
+        {
+            // Restauramos el color original del último tile resaltado
+            tilemap.SetColor(lastHighlightedCell, Color.white);  // Puedes cambiar "Color.white" por el color original de los tiles
+            lastHighlightedCell = Vector3Int.zero;
+        }
     }
-}
 
 
     private Block GetBlockAtPosition(Vector3Int cellPosition)
@@ -215,7 +215,7 @@ private void ClearHighlight()
         return null;
     }
 
-    private void Cavar()
+    public void Cavar()
     {
         Vector2 direccion = Vector2.zero;
 
