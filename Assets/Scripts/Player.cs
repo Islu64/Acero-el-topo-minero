@@ -45,11 +45,31 @@ public class Player : MonoBehaviour
 
     private Coroutine picoCoroutine;
 
+    public bool WithDiamond { get; private set; } = false; // Propiedad que indica si el personaje tiene el diamante
+    private float countdownTime; // Tiempo restante en la cuenta atrás
+
+    public static string lastDoorID;
+
+    private ScreenFlash screenFlash;
+
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
         tilemap = FindObjectOfType<Tilemap>();
         picoSprite.enabled = false;
+
+        // Si hay un ID de puerta guardado, intenta encontrar esa puerta y posicionar al jugador en ella
+        if (!string.IsNullOrEmpty(lastDoorID))
+        {
+            Door entranceDoor = FindDoorByID(lastDoorID);
+            if (entranceDoor != null)
+            {
+                // Posiciona al jugador en la puerta correspondiente
+                transform.position = entranceDoor.transform.position;
+            }
+        }
+
+        screenFlash = FindObjectOfType<ScreenFlash>();
     }
 
     public void Update()
@@ -306,6 +326,45 @@ public class Player : MonoBehaviour
             return;
         }
 
+    }
+
+    private Door FindDoorByID(string id)
+    {
+        Door[] doors = FindObjectsOfType<Door>();
+        foreach (Door door in doors)
+        {
+            if (door.doorID == id)
+            {
+                return door;
+            }
+        }
+        return null; // Si no encuentra la puerta
+    }
+
+    public void CollectDiamond(float time)
+    {
+        WithDiamond = true;
+        countdownTime = time;
+        StartCoroutine(StartCountdown());
+    }
+    private IEnumerator StartCountdown()
+    {
+        while (countdownTime > 0)
+        {
+            countdownTime -= Time.deltaTime;
+            Debug.Log("Tiempo restante: " + Mathf.Ceil(countdownTime));
+            yield return null;
+        }
+
+        Debug.Log("¡Se acabó el tiempo!");
+        WithDiamond = false;
+
+        WithDiamond = false;
+        if (screenFlash != null)
+        {
+            screenFlash.StopFlashing(); // Detiene el parpadeo cuando se acaba el tiempo
+        }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private IEnumerator InvencibilidadTemporal(){
