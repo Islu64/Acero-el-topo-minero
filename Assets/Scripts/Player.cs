@@ -54,10 +54,11 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        
         rigid = GetComponent<Rigidbody2D>();
         tilemap = FindObjectOfType<Tilemap>();
         picoSprite.enabled = false;
-
+        hp = PlayerPrefs.GetInt("HP", 3);
         // Si hay un ID de puerta guardado, intenta encontrar esa puerta y posicionar al jugador en ella
         if (!string.IsNullOrEmpty(lastDoorID))
         {
@@ -75,7 +76,7 @@ public class Player : MonoBehaviour
     public void Update()
     {
         movimientoHorizontal = Input.GetAxisRaw("Horizontal") * moveSpeed;
-
+        DibujarVida();
         if (Input.GetButtonDown("Jump"))
         {
             salto = true;
@@ -308,13 +309,17 @@ public class Player : MonoBehaviour
             switch (hp)
             {
                 case 2:
-                    Destroy(GameObject.FindGameObjectWithTag("HP2"));
+                    PlayerPrefs.SetInt("HP", hp);
+                    DibujarVida();
                     break;
                 case 1:
-                    Destroy(GameObject.FindGameObjectWithTag("HP1"));
+                    PlayerPrefs.SetInt("HP", hp);
+                    DibujarVida();
                     break;
-                case 0: Destroy(GameObject.FindGameObjectWithTag("HP0"));
-                        Monedas = 0;
+                case 0: 
+                    PlayerPrefs.SetInt("HP", 3);
+                    DibujarVida();
+                    Monedas = 0;
                     Die();
                     break;
 
@@ -397,5 +402,19 @@ public class Player : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(controladorSuelo.position, dimensionesCaja);
+    }
+
+    private void DibujarVida(){
+        switch (hp)
+            {
+                default: break;
+                case 2:
+                    Destroy(GameObject.FindGameObjectWithTag("HP2"));
+                    break;
+                case 1:
+                    Destroy(GameObject.FindGameObjectWithTag("HP1"));
+                    break;
+
+            }
     }
 }

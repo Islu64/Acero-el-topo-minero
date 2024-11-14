@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI; // Para el uso de Text
-using TMPro; // Si estás usando TextMeshPro
+using TMPro; // Si estï¿½s usando TextMeshPro
 
 public class EndGameDoor : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class EndGameDoor : MonoBehaviour
 
     void Start()
     {
-        // Asegúrate de que el texto esté oculto al inicio
+        // Asegï¿½rate de que el texto estï¿½ oculto al inicio
         if (endGameText != null)
         {
             endGameText.gameObject.SetActive(false);
@@ -21,6 +21,7 @@ public class EndGameDoor : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            GameManager.instance.StopCountdown();
             ShowEndGameMessage();
         }
     }
@@ -46,11 +47,11 @@ public class EndGameDoor : MonoBehaviour
 
     private void QuitGame()
     {
-        // Lógica para salir del juego
+        // Lï¿½gica para salir del juego
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false; // Detiene el juego en el editor
 #else
-        Application.Quit(); // Cierra el juego en una compilación
+        Application.Quit(); // Cierra el juego en una compilaciï¿½n
 #endif
     }
 }

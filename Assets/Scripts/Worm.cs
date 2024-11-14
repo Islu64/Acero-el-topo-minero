@@ -5,20 +5,20 @@ using UnityEngine;
 public class Worm : MonoBehaviour
 {
     private Rigidbody2D rigid;  // Referencia al Rigidbody2D
-    private bool mirandoDerecha = true;  // Para saber en qué dirección está mirando
-    private bool puedeMoverse = true;  // Para controlar cuándo puede moverse
+    private bool mirandoDerecha = false;  // Para saber en quï¿½ direcciï¿½n estï¿½ mirando
+    private bool puedeMoverse = true;  // Para controlar cuï¿½ndo puede moverse
 
     [Header("Movimiento")]
     [SerializeField] private float moveSpeed = 2f;  // Velocidad de movimiento
-    [SerializeField] private float tiempoCambioDireccion = 2f;  // Tiempo entre cambios de dirección
+    [SerializeField] private float tiempoCambioDireccion = 2f;  // Tiempo entre cambios de direcciï¿½n
     [SerializeField] private float rangoAleatorioMovimiento = 3f;  // Aleatoriedad en el tiempo de movimiento
 
     [Header("Suelo")]
     [SerializeField] private Transform controladorSuelo;  // Punto para detectar el suelo
     [SerializeField] private LayerMask queEsSuelo;  // La capa que se considera suelo
-    [SerializeField] private Vector3 dimensionesCaja;  // Dimensiones del área que detecta el suelo
+    [SerializeField] private Vector3 dimensionesCaja;  // Dimensiones del ï¿½rea que detecta el suelo
 
-    private bool enSuelo;  // Para detectar si está en el suelo
+    [SerializeField] private bool enSuelo;  // Para detectar si estï¿½ en el suelo
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +34,7 @@ public class Worm : MonoBehaviour
 
         if (puedeMoverse && enSuelo)
         {
-            // Asegurarse de que el movimiento se aplique en la dirección correcta
+            // Asegurarse de que el movimiento se aplique en la direcciï¿½n correcta
             float mover = mirandoDerecha ? moveSpeed : -moveSpeed;
             rigid.velocity = new Vector2(mover, rigid.velocity.y);
         }
@@ -52,7 +52,7 @@ public class Worm : MonoBehaviour
             // Esperar un tiempo aleatorio entre movimientos
             yield return new WaitForSeconds(Random.Range(1f, tiempoCambioDireccion + rangoAleatorioMovimiento));
 
-            // Cambiar de dirección aleatoriamente
+            // Cambiar de direcciï¿½n aleatoriamente
             if (Random.value > 0.5f)
             {
                 Girar();
@@ -67,13 +67,13 @@ public class Worm : MonoBehaviour
     {
         mirandoDerecha = !mirandoDerecha;
 
-        // Cambiar la escala del sprite para reflejar el cambio de dirección visualmente
+        // Cambiar la escala del sprite para reflejar el cambio de direcciï¿½n visualmente
         Vector3 escala = transform.localScale;
         escala.x *= -1;  // Invertir la escala en el eje X
         transform.localScale = escala;
     }
 
-    // Función para visualizar el área de detección del suelo
+    // Funciï¿½n para visualizar el ï¿½rea de detecciï¿½n del suelo
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
