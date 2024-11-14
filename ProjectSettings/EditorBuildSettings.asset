@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Acero.unity
+    guid: 7c1662f3194ef9349818442d2b071706
+  - enabled: 1
+    path: Assets/Scenes/Diamante.unity
+    guid: b7481b37d215c0b4fa9fab4ec9d09723
+  - enabled: 1
+    path: Assets/Scenes/Oreca.unity
+    guid: d5e6e2e2c28ee814595c2ff1c4310b94
+  - enabled: 1
+    path: Assets/Scenes/Secreto.unity
+    guid: 72bd8864af4a00b4d98dc64e8d7fbd68
   m_configObjects: {}

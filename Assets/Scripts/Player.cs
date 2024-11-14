@@ -315,8 +315,8 @@ public class Player : MonoBehaviour
                     break;
                 case 0: Destroy(GameObject.FindGameObjectWithTag("HP0"));
                         Monedas = 0;
-                        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-                        break;
+                    Die();
+                    break;
 
             }
             StartCoroutine(InvencibilidadTemporal());
@@ -384,6 +384,14 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(frecuenciaParpadeo); // Espera el tiempo de parpadeo
         }
         spriteRenderer.enabled = true; // Asegúrate de que el sprite esté visible al finalizar el parpadeo
+    }
+
+    public void Die()
+    {
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.LoadGameOverScene(); // Llama al GameManager para cargar la escena "Acero"
+        }
     }
     private void OnDrawGizmos()
     {

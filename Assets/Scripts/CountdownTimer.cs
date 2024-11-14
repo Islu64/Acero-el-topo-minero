@@ -2,7 +2,6 @@ using UnityEngine;
 using TMPro; // Usar esto si estás utilizando TextMeshPro
 using System.Collections.Generic;
 using System.Collections;
-using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.SceneManagement;
 
