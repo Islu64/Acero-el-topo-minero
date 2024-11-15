@@ -13,7 +13,7 @@ public class Diamond : MonoBehaviour
             if (player != null && GameManager.instance != null)
             {
                 player.CollectDiamond(countdownTime);
-                GameManager.instance.StartCountdown(countdownTime); // Inicia la cuenta atrás en el GameManager
+                GameManager.instance.StartCountdown(countdownTime); // Inicia la cuenta atrï¿½s en el GameManager
                 Destroy(gameObject); // Destruye el diamante
             }
         }

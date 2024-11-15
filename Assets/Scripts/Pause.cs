@@ -46,6 +46,7 @@ public class Pause : MonoBehaviour
 
     public void Reiniciar()
     {
+        PlayerPrefs.SetInt("HP", 3);
         Time.timeScale = 1f;
         escPushed = true;
         estado = Estados.Juego;

@@ -54,7 +54,10 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        
+        if (!PlayerPrefs.HasKey("HP"))
+        {
+            PlayerPrefs.SetInt("HP", 3); // Establecer la vida inicial si no existe
+        }
         rigid = GetComponent<Rigidbody2D>();
         tilemap = FindObjectOfType<Tilemap>();
         picoSprite.enabled = false;
@@ -305,25 +308,7 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy") && !invencible)
         {
-            hp--;
-            switch (hp)
-            {
-                case 2:
-                    PlayerPrefs.SetInt("HP", hp);
-                    DibujarVida();
-                    break;
-                case 1:
-                    PlayerPrefs.SetInt("HP", hp);
-                    DibujarVida();
-                    break;
-                case 0: 
-                    PlayerPrefs.SetInt("HP", 3);
-                    DibujarVida();
-                    Monedas = 0;
-                    Die();
-                    break;
-
-            }
+            PerderVida();
             StartCoroutine(InvencibilidadTemporal());
             StartCoroutine(ParpadeoInvencible()); // Inicia el parpadeo
         }
@@ -331,6 +316,25 @@ public class Player : MonoBehaviour
             return;
         }
 
+    }
+
+    public void PerderVida(){
+        hp--;
+            switch (hp)
+            {
+                case 2:
+                    PlayerPrefs.SetInt("HP", hp);
+                    break;
+                case 1:
+                    PlayerPrefs.SetInt("HP", hp);
+                    break;
+                case 0: 
+                    PlayerPrefs.SetInt("HP", 3);
+                    Monedas = 0;
+                    Die();
+                    break;
+
+            }
     }
 
     private Door FindDoorByID(string id)
@@ -412,6 +416,7 @@ public class Player : MonoBehaviour
                     Destroy(GameObject.FindGameObjectWithTag("HP2"));
                     break;
                 case 1:
+                    Destroy(GameObject.FindGameObjectWithTag("HP2"));
                     Destroy(GameObject.FindGameObjectWithTag("HP1"));
                     break;
 

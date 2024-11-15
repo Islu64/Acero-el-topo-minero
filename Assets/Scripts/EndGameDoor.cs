@@ -22,6 +22,7 @@ public class EndGameDoor : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             GameManager.instance.StopCountdown();
+            PlayerPrefs.SetInt("HP", 3);
             ShowEndGameMessage();
         }
     }
