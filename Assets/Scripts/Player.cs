@@ -99,26 +99,26 @@ public class Player : MonoBehaviour
 
         Vector2 direccion = Vector2.zero;
 
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
         {
             direccion = Vector2.up;
         }
-        else if (Input.GetKey(KeyCode.DownArrow))
+        else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
         {
             direccion = Vector2.down;
         }
-        else if (Input.GetKey(KeyCode.LeftArrow))
+        else if (!mirandoDerecha)
         {
             direccion = Vector2.left;
         }
-        else if (Input.GetKey(KeyCode.RightArrow))
+        else if (mirandoDerecha)
         {
             direccion = Vector2.right;
         }
 
         HighlightBlock(direccion);
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             Cavar();
         }
@@ -243,19 +243,19 @@ public class Player : MonoBehaviour
     {
         Vector2 direccion = Vector2.zero;
 
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
         {
             direccion = Vector2.up;
         }
-        else if (Input.GetKey(KeyCode.DownArrow))
+        else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
         {
             direccion = Vector2.down;
         }
-        else if (Input.GetKey(KeyCode.LeftArrow))
+        else if (!mirandoDerecha)
         {
             direccion = Vector2.left;
         }
-        else if (Input.GetKey(KeyCode.RightArrow))
+        else if (mirandoDerecha)
         {
             direccion = Vector2.right;
         }
