@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
     [SerializeField] public float fuerzaDeSalto;
     [SerializeField] private LayerMask queEsSuelo;
     [SerializeField] private Transform controladorSuelo;
-    [SerializeField] private Vector3 dimensionesCaja;
+    [SerializeField] private Vector3 dimensionesCaja = new Vector3(0.5f, 0.1f, 0f);
     [SerializeField] public bool enSuelo;
     public bool salto = false;
 
@@ -42,7 +42,6 @@ public class Player : MonoBehaviour
     public float runTimer = 0f; // Temporizador de carrera
     public bool isRunning = false; // Indica si el personaje está corriendo
 
-
     private Coroutine picoCoroutine;
 
     public bool WithDiamond { get; private set; } = false; // Propiedad que indica si el personaje tiene el diamante
@@ -51,6 +50,9 @@ public class Player : MonoBehaviour
     public static string lastDoorID;
 
     private ScreenFlash screenFlash;
+
+    public Collider2D playerCollider;
+    private PhysicsMaterial2D lowFrictionMaterial;
 
     void Start()
     {
@@ -73,8 +75,23 @@ public class Player : MonoBehaviour
             }
         }
 
+        lowFrictionMaterial = new PhysicsMaterial2D
+        {
+            friction = 0f,
+            bounciness = 0f
+        };
+
+        if (playerCollider != null)
+        {
+            playerCollider.sharedMaterial = lowFrictionMaterial;
+        }
+        playerCollider = GetComponent<Collider2D>();
+
         screenFlash = FindObjectOfType<ScreenFlash>();
     }
+
+
+
 
     public void Update()
     {
@@ -95,6 +112,11 @@ public class Player : MonoBehaviour
         {
             isRunning = false;
             runTimer = 0f; // Reinicia el temporizador si no se está corriendo
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Debug.Log($"Constraints: {rigid.constraints}");
         }
 
         Vector2 direccion = Vector2.zero;
@@ -135,7 +157,6 @@ public class Player : MonoBehaviour
         {
             rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
-
 
         Mover(movimientoHorizontal * Time.fixedDeltaTime, salto);
         salto = false;
@@ -287,6 +308,7 @@ public class Player : MonoBehaviour
 
                         // Eliminamos el tile (romper el bloque)
                         tilemap.SetTile(cellPosition, null);
+                        tilemap.RefreshTile(cellPosition);
                     }
                 }
 
@@ -306,12 +328,34 @@ public class Player : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log("Collided with: " + collision.gameObject.name);
+
         if (collision.gameObject.CompareTag("Enemy") && !invencible)
         {
             PerderVida();
             StartCoroutine(InvencibilidadTemporal());
             StartCoroutine(ParpadeoInvencible()); // Inicia el parpadeo
         }
+        else if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            // Define the step-up logic
+            float stepHeight = 0.2f; // Max height the player can step over
+            float stepCheckDistance = 0.5f; // Distance to check for obstacles
+            Vector2 origin = (Vector2)controladorSuelo.position + new Vector2(0, stepHeight); // Adjusted raycast origin
+
+            // Cast a ray forward
+            RaycastHit2D hit = Physics2D.Raycast(origin, mirandoDerecha ? Vector2.right : Vector2.left, stepCheckDistance, queEsSuelo);
+
+            Debug.DrawRay(origin, mirandoDerecha ? Vector2.right : Vector2.left * stepCheckDistance, Color.red);
+
+            // If there's an obstacle and it's below the step height, move up
+            if (hit.collider == null)
+            {
+                transform.position += new Vector3(0, stepHeight, 0);
+            }
+        }
+       
+
         else {
             return;
         }
