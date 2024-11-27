@@ -51,9 +51,6 @@ public class Player : MonoBehaviour
 
     private ScreenFlash screenFlash;
 
-    public Collider2D playerCollider;
-    private PhysicsMaterial2D lowFrictionMaterial;
-
     void Start()
     {
         if (!PlayerPrefs.HasKey("HP"))
@@ -74,18 +71,6 @@ public class Player : MonoBehaviour
                 transform.position = entranceDoor.transform.position;
             }
         }
-
-        lowFrictionMaterial = new PhysicsMaterial2D
-        {
-            friction = 0f,
-            bounciness = 0f
-        };
-
-        if (playerCollider != null)
-        {
-            playerCollider.sharedMaterial = lowFrictionMaterial;
-        }
-        playerCollider = GetComponent<Collider2D>();
 
         screenFlash = FindObjectOfType<ScreenFlash>();
     }
@@ -112,11 +97,6 @@ public class Player : MonoBehaviour
         {
             isRunning = false;
             runTimer = 0f; // Reinicia el temporizador si no se está corriendo
-        }
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            Debug.Log($"Constraints: {rigid.constraints}");
         }
 
         Vector2 direccion = Vector2.zero;
@@ -241,7 +221,7 @@ public class Player : MonoBehaviour
         if (lastHighlightedCell != Vector3Int.zero)
         {
             // Restauramos el color original del último tile resaltado
-            tilemap.SetColor(lastHighlightedCell, Color.white);  // Puedes cambiar "Color.white" por el color original de los tiles
+            tilemap.SetColor(lastHighlightedCell, Color.white);  
             lastHighlightedCell = Vector3Int.zero;
         }
     }
@@ -338,18 +318,18 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Obstacle"))
         {
-            // Define the step-up logic
             float stepHeight = 0.2f; // Max height the player can step over
-            float stepCheckDistance = 0.5f; // Distance to check for obstacles
-            Vector2 origin = (Vector2)controladorSuelo.position + new Vector2(0, stepHeight); // Adjusted raycast origin
+            float stepCheckDistance = 0.5f;
+            Vector2 origin = (Vector2)controladorSuelo.position + new Vector2(0, stepHeight); 
 
-            // Cast a ray forward
-            RaycastHit2D hit = Physics2D.Raycast(origin, mirandoDerecha ? Vector2.right : Vector2.left, stepCheckDistance, queEsSuelo);
+            RaycastHit2D hitForward = Physics2D.Raycast(origin, mirandoDerecha ? Vector2.right : Vector2.left, stepCheckDistance, queEsSuelo);
+            RaycastHit2D hitDown = Physics2D.Raycast(origin, Vector2.down, 1, queEsSuelo);
 
             Debug.DrawRay(origin, mirandoDerecha ? Vector2.right : Vector2.left * stepCheckDistance, Color.red);
+            Debug.DrawRay(origin, Vector2.down, Color.red);
 
             // If there's an obstacle and it's below the step height, move up
-            if (hit.collider == null)
+            if (hitForward.collider == null && hitDown.collider==null)
             {
                 transform.position += new Vector3(0, stepHeight, 0);
             }
