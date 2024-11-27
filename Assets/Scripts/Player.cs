@@ -295,6 +295,8 @@ public class Player : MonoBehaviour
 
             }
         }
+        
+        rigid.velocity = Vector2.zero; // Reseta la velocidad despues de cavar
     }
 
     private IEnumerator MostrarPico(Vector2 direccion)
