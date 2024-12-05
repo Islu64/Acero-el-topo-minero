@@ -8,14 +8,15 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     public Rigidbody2D rigid;
-    public static int Monedas = 0;
-    public bool invencible = false;
-    [SerializeField] private float secsInvencible;
+    public static int Monedas = 0; //Variable que lleva la cuenta de las monedas
+    public static bool invencible = false; //Variable que controla si el jugador es invencible o no
+    public static bool auto = false; //Variable de control del modo de acciones automatico
+    [SerializeField] private float secsInvencible; //Segundos de duración de la invencibilidad
     [Header("Movimiento")]
     public float movimientoHorizontal = 0f;
-    public int hp = 3;
-    [SerializeField] public float moveSpeed;
-    [SerializeField] public float suavizadoDeMovimiento;
+    public int hp = 3;//Vidas del personaje
+    [SerializeField] public float moveSpeed; //Velocidad de movimiento
+    [SerializeField] public float suavizadoDeMovimiento; 
     public Vector3 velocidad = Vector3.zero;
     public bool mirandoDerecha = true;
 
@@ -120,7 +121,7 @@ public class Player : MonoBehaviour
 
         HighlightBlock(direccion);
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) || auto)
         {
             Cavar();
         }
@@ -296,7 +297,6 @@ public class Player : MonoBehaviour
             }
         }
         
-        rigid.velocity = Vector2.zero; // Reseta la velocidad despues de cavar
     }
 
     private IEnumerator MostrarPico(Vector2 direccion)
