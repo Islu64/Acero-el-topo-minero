@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Pause : MonoBehaviour
 {
-    private Boolean escPushed = false;
+    public bool escPushed = false;
     private Estados estado = Estados.Juego;
     [SerializeField] private GameObject PantallaPausa;
     [SerializeField] private GameObject PantallaConfig;

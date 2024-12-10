@@ -4,79 +4,76 @@ using UnityEngine;
 
 public class Worm : MonoBehaviour
 {
-    private Rigidbody2D rigid;  // Referencia al Rigidbody2D
-    private bool mirandoDerecha = false;  // Para saber en qu� direcci�n est� mirando
-    private bool puedeMoverse = true;  // Para controlar cu�ndo puede moverse
+    private Rigidbody2D rigid;
+    private bool mirandoDerecha = false;
 
     [Header("Movimiento")]
     [SerializeField] private float moveSpeed = 2f;  // Velocidad de movimiento
-    [SerializeField] private float tiempoCambioDireccion = 2f;  // Tiempo entre cambios de direcci�n
-    [SerializeField] private float rangoAleatorioMovimiento = 3f;  // Aleatoriedad en el tiempo de movimiento
 
-    [Header("Suelo")]
-    [SerializeField] private Transform controladorSuelo;  // Punto para detectar el suelo
-    [SerializeField] private LayerMask queEsSuelo;  // La capa que se considera suelo
-    [SerializeField] private Vector3 dimensionesCaja;  // Dimensiones del �rea que detecta el suelo
+    [Header("Detección de suelo y paredes")]
+    [SerializeField] private Transform controladorBorde;   // Punto al frente hacia abajo para detectar el fin del suelo
+    [SerializeField] private Transform controladorPared;   // Punto frontal para detectar paredes
+    [SerializeField] private LayerMask queEsSuelo;         // Capa que se considera suelo/pared
+    [SerializeField] private Vector2 dimensionesCajaSuelo; // Dimensiones del área que detecta el borde del suelo
+    [SerializeField] private Vector2 dimensionesCajaPared; // Dimensiones del área que detecta la pared
 
-    [SerializeField] private bool enSuelo;  // Para detectar si est� en el suelo
+    private bool haySueloAdelante;
+    private bool hayParedAdelante;
 
-    // Start is called before the first frame update
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
-        StartCoroutine(MoverAleatoriamente());
     }
 
-    // Update is called once per frame
     void Update()
     {
-        enSuelo = Physics2D.OverlapBox(controladorSuelo.position, dimensionesCaja, 0f, queEsSuelo);
+        // Comprobar si hay suelo adelante
+        haySueloAdelante = Physics2D.OverlapBox(controladorBorde.position, dimensionesCajaSuelo, 0f, queEsSuelo);
 
-        if (puedeMoverse && enSuelo)
+        // Comprobar si hay pared adelante
+        hayParedAdelante = Physics2D.OverlapBox(controladorPared.position, dimensionesCajaPared, 0f, queEsSuelo);
+
+        // Si no hay suelo adelante o hay una pared, girar
+        if (!haySueloAdelante || hayParedAdelante)
         {
-            // Asegurarse de que el movimiento se aplique en la direcci�n correcta
-            float mover = mirandoDerecha ? moveSpeed : -moveSpeed;
-            rigid.velocity = new Vector2(mover, rigid.velocity.y);
+            Girar();
         }
-        else
-        {
-            // Si no puede moverse, se detiene
-            rigid.velocity = new Vector2(0, rigid.velocity.y);
-        }
+
+        // Mover al gusano
+        float mover = mirandoDerecha ? moveSpeed : -moveSpeed;
+        rigid.velocity = new Vector2(mover, rigid.velocity.y);
     }
 
-    private IEnumerator MoverAleatoriamente()
+    // Cuando colisione con otro enemigo, girar también
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        while (true)
+        if (collision.gameObject.CompareTag("Enemy"))
         {
-            // Esperar un tiempo aleatorio entre movimientos
-            yield return new WaitForSeconds(Random.Range(1f, tiempoCambioDireccion + rangoAleatorioMovimiento));
-
-            // Cambiar de direcci�n aleatoriamente
-            if (Random.value > 0.5f)
-            {
-                Girar();
-            }
-
-            // Moverse o detenerse aleatoriamente
-            puedeMoverse = Random.value > 0.2f;  // 80% de chance de moverse
+            Girar();
         }
     }
 
     private void Girar()
     {
         mirandoDerecha = !mirandoDerecha;
-
-        // Cambiar la escala del sprite para reflejar el cambio de direcci�n visualmente
         Vector3 escala = transform.localScale;
-        escala.x *= -1;  // Invertir la escala en el eje X
+        escala.x *= -1;  // Invertir la escala en el eje X para dar vuelta al sprite
         transform.localScale = escala;
     }
 
-    // Funci�n para visualizar el �rea de detecci�n del suelo
+    // Función para visualizar las áreas de detección
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(controladorSuelo.position, dimensionesCaja);
+        if (controladorBorde != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(controladorBorde.position, dimensionesCajaSuelo);
+        }
+
+        if (controladorPared != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireCube(controladorPared.position, dimensionesCajaPared);
+        }
     }
 }
