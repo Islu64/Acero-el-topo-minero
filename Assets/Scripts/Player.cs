@@ -121,7 +121,7 @@ public class Player : MonoBehaviour
 
         HighlightBlock(direccion);
 
-        if (Input.GetKeyDown(KeyCode.E) || auto)
+        if (Input.GetMouseButtonDown(0) || auto)
         {
             Cavar();
         }
