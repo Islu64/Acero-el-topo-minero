@@ -11,6 +11,7 @@ public class Pause : MonoBehaviour
     private Estados estado = Estados.Juego;
     [SerializeField] private GameObject PantallaPausa;
     [SerializeField] private GameObject PantallaConfig;
+    [SerializeField] private GameObject GameOver;
     [SerializeField] private GameObject botonContinuar;
     [SerializeField] private GameObject botonReiniciar;
     [SerializeField] private GameObject botonInvencibilidadOff;
@@ -63,6 +64,7 @@ public class Pause : MonoBehaviour
         escPushed = true;
         estado = Estados.Juego;
         PantallaPausa.SetActive(false);
+        GameOver.SetActive(false);
         escPushed = false;
         Destroy(gameObject);
         SceneManager.LoadScene("Acero");

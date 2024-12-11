@@ -295,6 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 1
+  spriteTransform: {fileID: 2470408644060179637}
   controladorBorde: {fileID: 6201882905663608008}
   controladorPared: {fileID: 8638734349861209551}
   queEsSuelo:

@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     public static bool invencible = false; //Variable que controla si el jugador es invencible o no
     public static bool auto = false; //Variable de control del modo de acciones automatico
     [SerializeField] private float secsInvencible; //Segundos de duración de la invencibilidad
+    [SerializeField] private GameObject GameOver;
     [Header("Movimiento")]
     public float movimientoHorizontal = 0f;
     public int hp = 3;//Vidas del personaje
@@ -320,9 +321,13 @@ public class Player : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy") && !invencible)
         {
-            PerderVida();
-            StartCoroutine(InvencibilidadTemporal());
-            StartCoroutine(ParpadeoInvencible()); // Inicia el parpadeo
+            if(hp > 1){
+                PerderVida();
+                StartCoroutine(InvencibilidadTemporal());
+                StartCoroutine(ParpadeoInvencible()); // Inicia el parpadeo
+            }else {
+                PerderVida();
+            }
         }
         else if (collision.gameObject.CompareTag("Obstacle"))
         {
@@ -429,10 +434,7 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
-        if (GameManager.instance != null)
-        {
-            GameManager.instance.LoadGameOverScene(); // Llama al GameManager para cargar la escena "Acero"
-        }
+        GameOver.SetActive(true);
     }
     private void OnDrawGizmos()
     {
