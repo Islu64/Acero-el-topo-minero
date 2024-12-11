@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public static int Monedas = 0; //Variable que lleva la cuenta de las monedas
     public static bool invencible = false; //Variable que controla si el jugador es invencible o no
     public static bool auto = false; //Variable de control del modo de acciones automatico
+    private Animator animator;
     [SerializeField] private float secsInvencible; //Segundos de duración de la invencibilidad
     [SerializeField] private GameObject GameOver;
     [Header("Movimiento")]
@@ -67,6 +68,8 @@ public class Player : MonoBehaviour
         tilemap = FindObjectOfType<Tilemap>();
         picoSprite.enabled = false;
         hp = PlayerPrefs.GetInt("HP", 3);
+        animator = GetComponentInChildren<Animator>();
+        animator.SetBool("Andando", false);
         // Si hay un ID de puerta guardado, intenta encontrar esa puerta y posicionar al jugador en ella
         if (!string.IsNullOrEmpty(lastDoorID))
         {
@@ -87,12 +90,17 @@ public class Player : MonoBehaviour
     public void Update()
     {
         movimientoHorizontal = Input.GetAxisRaw("Horizontal") * moveSpeed;
+        if(movimientoHorizontal > 0 || movimientoHorizontal < 0){
+            animator.SetBool("Andando", true);
+        }else{
+            animator.SetBool("Andando", false);
+        }
         DibujarVida();
         if (Input.GetButtonDown("Jump"))
         {
+            animator.SetBool("Saltando", true);
             salto = true;
         }
-
         // Verifica si el botón de correr está presionado y el personaje se está moviendo
         if (Input.GetKey(KeyCode.X) && Mathf.Abs(movimientoHorizontal) > 0)
         {
@@ -139,6 +147,7 @@ public class Player : MonoBehaviour
         enSuelo = Physics2D.OverlapBox(controladorSuelo.position, dimensionesCaja, 0f, queEsSuelo);
         if (enSuelo && !salto)
         {
+            animator.SetBool("Saltando", false);
             rigid.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
         }
         else
