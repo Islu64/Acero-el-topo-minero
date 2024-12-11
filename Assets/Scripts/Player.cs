@@ -38,6 +38,10 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer picoSprite;  // Asignar el objeto con el sprite del pico
     [SerializeField] private float tiempoMostrarPico = 0.5f;
 
+    [SerializeField] private float tiempoEntreCavados = 0.2f; // Tiempo en segundos
+    private float proximoCavado = 0f;
+
+
     [SerializeField] public float runSpeedMultiplier = 300f; // Multiplicador adicional al correr
     [SerializeField] public float timeToMaxRunSpeed = 0.0001f; // Tiempo para alcanzar velocidad máxima
     public float runTimer = 0f; // Temporizador de carrera
@@ -121,10 +125,12 @@ public class Player : MonoBehaviour
 
         HighlightBlock(direccion);
 
-        if (Input.GetMouseButtonDown(0) || auto)
+        if ((Input.GetMouseButton(0) || auto) && Time.time >= proximoCavado)
         {
-            Cavar();
-        }
+        proximoCavado = Time.time + tiempoEntreCavados;
+        Cavar();
+    }
+
     }
 
     void FixedUpdate()
