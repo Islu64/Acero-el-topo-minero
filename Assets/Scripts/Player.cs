@@ -41,6 +41,10 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer picoSprite;  // Asignar el objeto con el sprite del pico
     [SerializeField] private float tiempoMostrarPico = 0.5f;
 
+    [SerializeField] private AudioClip sonidoPico; // Sonido da picareta
+    private AudioSource audioSource; // audio
+
+    
     [SerializeField] private float tiempoEntreCavados = 0.2f; // Tiempo en segundos
     private float proximoCavado = 0f;
 
@@ -82,9 +86,14 @@ public class Player : MonoBehaviour
         {
             PlayerPrefs.SetInt("HP", 3); // Establecer la vida inicial si no existe
         }
+        
         rigid = GetComponent<Rigidbody2D>();
         tilemap = FindObjectOfType<Tilemap>();
         picoSprite.enabled = false;
+        
+        // Inicializar o AudioSource
+        audioSource = GetComponent<AudioSource>();
+        
         hp = PlayerPrefs.GetInt("HP", 3);
         animator = GetComponentInChildren<Animator>();
         animator.SetBool("Andando", false);
@@ -323,6 +332,13 @@ public class Player : MonoBehaviour
                         // Mostrar el pico en la posición adecuada
                         StartCoroutine(MostrarPico(direccion));
 
+                        // Tocar o som da picareta
+                        if (sonidoPico != null && audioSource != null)
+                        {
+                            audioSource.PlayOneShot(sonidoPico);
+                        }
+
+                        
                         // Eliminamos el tile (romper el bloque)
                         tilemap.SetTile(cellPosition, null);
                         tilemap.RefreshTile(cellPosition);
