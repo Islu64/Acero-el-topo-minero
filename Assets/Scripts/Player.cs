@@ -12,13 +12,14 @@ public class Player : MonoBehaviour
     public static bool invencible = false; //Variable que controla si el jugador es invencible o no
     public static bool auto = false; //Variable de control del modo de acciones automatico
     private Animator animator;
+    public Vector3 posicionInicial;
     [SerializeField] private float secsInvencible; //Segundos de duración de la invencibilidad
     [SerializeField] private GameObject GameOver;
     [Header("Movimiento")]
     public float movimientoHorizontal = 0f;
     public int hp = 3;//Vidas del personaje
     [SerializeField] public float moveSpeed; //Velocidad de movimiento
-    [SerializeField] public float suavizadoDeMovimiento; 
+    [SerializeField] public float suavizadoDeMovimiento;
     public Vector3 velocidad = Vector3.zero;
     public bool mirandoDerecha = true;
 
@@ -60,6 +61,23 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        if (!PlayerPrefs.HasKey("InitialPositionX") || !PlayerPrefs.HasKey("InitialPositionY") || !PlayerPrefs.HasKey("InitialPositionZ"))
+        {
+            // Guardar la primera posición inicial si no está guardada
+            posicionInicial = transform.position;
+            PlayerPrefs.SetFloat("InitialPositionX", posicionInicial.x);
+            PlayerPrefs.SetFloat("InitialPositionY", posicionInicial.y);
+            PlayerPrefs.SetFloat("InitialPositionZ", posicionInicial.z);
+            PlayerPrefs.Save();
+        }
+        else
+        {
+            // Si ya existe una posición inicial guardada, cargarla
+            float x = PlayerPrefs.GetFloat("InitialPositionX");
+            float y = PlayerPrefs.GetFloat("InitialPositionY");
+            float z = PlayerPrefs.GetFloat("InitialPositionZ");
+            posicionInicial = new Vector3(x, y, z);
+        }
         if (!PlayerPrefs.HasKey("HP"))
         {
             PlayerPrefs.SetInt("HP", 3); // Establecer la vida inicial si no existe
@@ -80,7 +98,6 @@ public class Player : MonoBehaviour
                 transform.position = entranceDoor.transform.position;
             }
         }
-
         screenFlash = FindObjectOfType<ScreenFlash>();
     }
 
@@ -90,9 +107,12 @@ public class Player : MonoBehaviour
     public void Update()
     {
         movimientoHorizontal = Input.GetAxisRaw("Horizontal") * moveSpeed;
-        if(movimientoHorizontal > 0 || movimientoHorizontal < 0){
+        if (movimientoHorizontal > 0 || movimientoHorizontal < 0)
+        {
             animator.SetBool("Andando", true);
-        }else{
+        }
+        else
+        {
             animator.SetBool("Andando", false);
         }
         DibujarVida();
@@ -136,9 +156,9 @@ public class Player : MonoBehaviour
 
         if ((Input.GetMouseButton(0) || auto) && Time.time >= proximoCavado)
         {
-        proximoCavado = Time.time + tiempoEntreCavados;
-        Cavar();
-    }
+            proximoCavado = Time.time + tiempoEntreCavados;
+            Cavar();
+        }
 
     }
 
@@ -231,14 +251,14 @@ public class Player : MonoBehaviour
             // Si no hay dirección seleccionada, limpiamos cualquier resalte
             ClearHighlight();
         }
-}
+    }
 
     private void ClearHighlight()
     {
         if (lastHighlightedCell != Vector3Int.zero)
         {
             // Restauramos el color original del último tile resaltado
-            tilemap.SetColor(lastHighlightedCell, Color.white);  
+            tilemap.SetColor(lastHighlightedCell, Color.white);
             lastHighlightedCell = Vector3Int.zero;
         }
     }
@@ -282,15 +302,15 @@ public class Player : MonoBehaviour
         {
             Debug.DrawRay(transform.position, direccion * distanciaCavar, Color.red, 0.5f);
             RaycastHit2D hit = Physics2D.Raycast(transform.position, direccion, distanciaCavar, capaDeBloques);
-            Debug.Log("Raycast hit: " + (hit.collider != null ? hit.collider.name : "null"));
-
             if (hit.collider != null)
             {
-                if (hit.collider.gameObject.tag == "Enemy") {
+                if (hit.collider.gameObject.tag == "Enemy")
+                {
                     Destroy(hit.collider.gameObject);
                 }
 
-                else {
+                else
+                {
                     // Ajuste: agregamos un pequeño desplazamiento para asegurarnos de que la posición está en la celda correcta
                     Vector3 hitPosition = hit.point + (Vector2)(direccion * 0.01f);
 
@@ -312,7 +332,7 @@ public class Player : MonoBehaviour
 
             }
         }
-        
+
     }
 
     private IEnumerator MostrarPico(Vector2 direccion)
@@ -326,15 +346,16 @@ public class Player : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collided with: " + collision.gameObject.name);
-
         if (collision.gameObject.CompareTag("Enemy") && !invencible)
         {
-            if(hp > 1){
+            if (hp > 1)
+            {
                 PerderVida();
                 StartCoroutine(InvencibilidadTemporal());
                 StartCoroutine(ParpadeoInvencible()); // Inicia el parpadeo
-            }else {
+            }
+            else
+            {
                 PerderVida();
             }
         }
@@ -342,7 +363,7 @@ public class Player : MonoBehaviour
         {
             float stepHeight = 0.2f; // Max height the player can step over
             float stepCheckDistance = 0.5f;
-            Vector2 origin = (Vector2)controladorSuelo.position + new Vector2(0, stepHeight); 
+            Vector2 origin = (Vector2)controladorSuelo.position + new Vector2(0, stepHeight);
 
             RaycastHit2D hitForward = Physics2D.Raycast(origin, mirandoDerecha ? Vector2.right : Vector2.left, stepCheckDistance, queEsSuelo);
             RaycastHit2D hitDown = Physics2D.Raycast(origin, Vector2.down, 1, queEsSuelo);
@@ -351,36 +372,38 @@ public class Player : MonoBehaviour
             Debug.DrawRay(origin, Vector2.down, Color.red);
 
             // If there's an obstacle and it's below the step height, move up
-            if (hitForward.collider == null && hitDown.collider==null)
+            if (hitForward.collider == null && hitDown.collider == null)
             {
                 transform.position += new Vector3(0, stepHeight, 0);
             }
         }
-       
 
-        else {
+
+        else
+        {
             return;
         }
 
     }
 
-    public void PerderVida(){
+    public void PerderVida()
+    {
         hp--;
-            switch (hp)
-            {
-                case 2:
-                    PlayerPrefs.SetInt("HP", hp);
-                    break;
-                case 1:
-                    PlayerPrefs.SetInt("HP", hp);
-                    break;
-                case 0: 
-                    PlayerPrefs.SetInt("HP", 3);
-                    Monedas = 0;
-                    Die();
-                    break;
+        switch (hp)
+        {
+            case 2:
+                PlayerPrefs.SetInt("HP", hp);
+                break;
+            case 1:
+                PlayerPrefs.SetInt("HP", hp);
+                break;
+            case 0:
+                PlayerPrefs.SetInt("HP", 3);
+                Monedas = 0;
+                Die();
+                break;
 
-            }
+        }
     }
 
     private Door FindDoorByID(string id)
@@ -407,13 +430,8 @@ public class Player : MonoBehaviour
         while (countdownTime > 0)
         {
             countdownTime -= Time.deltaTime;
-            Debug.Log("Tiempo restante: " + Mathf.Ceil(countdownTime));
             yield return null;
         }
-
-        Debug.Log("¡Se acabó el tiempo!");
-        WithDiamond = false;
-
         WithDiamond = false;
         if (screenFlash != null)
         {
@@ -422,7 +440,8 @@ public class Player : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    private IEnumerator InvencibilidadTemporal(){
+    private IEnumerator InvencibilidadTemporal()
+    {
         invencible = true;
         yield return new WaitForSeconds(secsInvencible);
         invencible = false;
@@ -432,7 +451,7 @@ public class Player : MonoBehaviour
 
     private IEnumerator ParpadeoInvencible()
     {
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>(); // Asumimos que el SpriteRenderer está en el mismo objeto
+        SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();// Asumimos que el SpriteRenderer está en el mismo objeto
         while (invencible)
         {
             spriteRenderer.enabled = !spriteRenderer.enabled; // Cambia el estado del sprite
@@ -451,18 +470,24 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireCube(controladorSuelo.position, dimensionesCaja);
     }
 
-    private void DibujarVida(){
+    private void DibujarVida()
+    {
         switch (hp)
-            {
-                default: break;
-                case 2:
-                    Destroy(GameObject.FindGameObjectWithTag("HP2"));
-                    break;
-                case 1:
-                    Destroy(GameObject.FindGameObjectWithTag("HP2"));
-                    Destroy(GameObject.FindGameObjectWithTag("HP1"));
-                    break;
+        {
+            default: break;
+            case 2:
+                Destroy(GameObject.FindGameObjectWithTag("HP2"));
+                break;
+            case 1:
+                Destroy(GameObject.FindGameObjectWithTag("HP2"));
+                Destroy(GameObject.FindGameObjectWithTag("HP1"));
+                break;
 
-            }
+        }
+    }
+
+    public void ReiniciarPos()
+    {
+        transform.position = posicionInicial;
     }
 }

@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class Pause : MonoBehaviour
 {
     public bool escPushed = false;
+    public Player player;
     private Estados estado = Estados.Juego;
     [SerializeField] private GameObject PantallaPausa;
     [SerializeField] private GameObject PantallaConfig;
@@ -21,7 +22,7 @@ public class Pause : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-         if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (estado == Estados.Juego)
             {
@@ -67,40 +68,49 @@ public class Pause : MonoBehaviour
         GameOver.SetActive(false);
         escPushed = false;
         Destroy(gameObject);
+        player = GameObject.Find("Acero").GetComponent<Player>();
+        Player.Monedas = 0;
         SceneManager.LoadScene("Acero");
+        player.ReiniciarPos();
     }
 
-    public void AbrirMenuConfig(){
+    public void AbrirMenuConfig()
+    {
         estado = Estados.Config;
         PantallaPausa.SetActive(false);
         PantallaConfig.SetActive(true);
     }
 
-    public void ConfigAtras(){
+    public void ConfigAtras()
+    {
         estado = Estados.Pausa;
         PantallaPausa.SetActive(true);
         PantallaConfig.SetActive(false);
     }
 
-    public void ActivarInvencible(){
+    public void ActivarInvencible()
+    {
         Player.invencible = true;
         botonInvencibilidadOff.SetActive(false);
         botonInvencibilidadOn.SetActive(true);
-        
+
     }
-    public void ActivarAuto(){
+    public void ActivarAuto()
+    {
         Player.auto = true;
         botonAutoOff.SetActive(false);
         botonAutoOn.SetActive(true);
-        
+
     }
 
-    public void DesactivarInvencible(){
+    public void DesactivarInvencible()
+    {
         Player.invencible = false;
         botonInvencibilidadOff.SetActive(true);
         botonInvencibilidadOn.SetActive(false);
     }
-    public void DesactivarAuto(){
+    public void DesactivarAuto()
+    {
         Player.auto = false;
         botonAutoOff.SetActive(true);
         botonAutoOn.SetActive(false);

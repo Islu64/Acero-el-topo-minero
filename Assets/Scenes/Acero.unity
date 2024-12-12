@@ -2271,7 +2271,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 2018754754, guid: 151910207e4fb0b44990f9ad53f1afb9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -8252,7 +8252,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 208
   controladorSuelo: {fileID: 1603385859}
-  dimensionesCaja: {x: 0.77, y: 0.06, z: 0}
+  dimensionesCaja: {x: 0.5, y: 0.06, z: 0}
   enSuelo: 0
   salto: 0
   distanciaCavar: 1
@@ -9988,7 +9988,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a20f0c231ecbc74b847951c3bd8f894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinText: {fileID: 0}
+  coinText: {fileID: 1843796028}
 --- !u!1001 &1071003210
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11690,6 +11690,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   escPushed: 0
+  player: {fileID: 890934757}
   PantallaPausa: {fileID: 486732087}
   PantallaConfig: {fileID: 784230071}
   GameOver: {fileID: 1706866032}

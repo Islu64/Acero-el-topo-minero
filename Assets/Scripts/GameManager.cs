@@ -7,8 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public float countdownTime = 60f;         // Tiempo total de cuenta atrás
-    public TextMeshProUGUI countdownText;     // Texto de la cuenta atrás en UI
+    public float countdownTime = 60f;         // Tiempo total de cuenta atrï¿½s
+    public TextMeshProUGUI countdownText;     // Texto de la cuenta atrï¿½s en UI
     public ScreenFlash screenFlash;           // Referencia al script ScreenFlash
 
     private bool isCountingDown = false;
@@ -25,21 +25,38 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject); // Destruye duplicados del GameManager si ya existe uno
         }
+        // Suscribir al evento de carga de escenas
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    void OnDestroy()
+    {
+        // Desuscribir del evento cuando el GameManager se destruye
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    // Este mÃ©todo se llama cada vez que se carga una nueva escena
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (countdownText == null && screenFlash == null)
+        {
+            // Asignamos las referencias de los objetos UI cuando la escena se cargue
+            countdownText = GameObject.Find("ContadorTiempo").GetComponent<TextMeshProUGUI>();
+            screenFlash = GameObject.Find("ScreenFlash").GetComponent<ScreenFlash>();
+        }
+    }
     void Start()
     {
-        countdownText.gameObject.SetActive(false); // Oculta el texto de la cuenta atrás al inicio
+        countdownText.gameObject.SetActive(false); // Oculta el texto de la cuenta atrï¿½s al inicio
     }
 
     public void StartCountdown(float time)
     {
         countdownTime = time;
         isCountingDown = true;
-        countdownText.gameObject.SetActive(true); // Muestra el texto de la cuenta atrás
+        countdownText.gameObject.SetActive(true); // Muestra el texto de la cuenta atrï¿½s
         if (screenFlash != null)
         {
-            screenFlash.StartFlashing(); // Inicia el parpadeo si está disponible
+            screenFlash.StartFlashing(); // Inicia el parpadeo si estï¿½ disponible
         }
         StartCoroutine(UpdateCountdown());
     }
@@ -47,7 +64,7 @@ public class GameManager : MonoBehaviour
     public void StopCountdown()
     {
         isCountingDown = false;
-        countdownText.gameObject.SetActive(false); // Oculta el texto de la cuenta atrás
+        countdownText.gameObject.SetActive(false); // Oculta el texto de la cuenta atrï¿½s
         if (screenFlash != null)
         {
             screenFlash.StopFlashing(); // Detiene el parpadeo
@@ -63,7 +80,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        // Cuando el tiempo se agote, detén la cuenta atrás y realiza la acción deseada
+        // Cuando el tiempo se agote, detï¿½n la cuenta atrï¿½s y realiza la acciï¿½n deseada
         if (countdownTime <= 0)
         {
             StopCountdown();

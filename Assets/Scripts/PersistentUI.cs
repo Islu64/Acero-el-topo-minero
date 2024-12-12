@@ -2,8 +2,17 @@ using UnityEngine;
 
 public class PersistentUI : MonoBehaviour
 {
-    void Awake()
+    public static PersistentUI instance;
+    private void Awake()
     {
-        DontDestroyOnLoad(gameObject); // Hace que el objeto persista entre escenas
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }
