@@ -462,6 +462,10 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
+        if(GameOver == null){
+            Transform hijoCanvas = transform.Find("PantallaGameOver");
+            GameOver = hijoCanvas.gameObject;
+        }
         GameOver.SetActive(true);
     }
     private void OnDrawGizmos()
