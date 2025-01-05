@@ -19,7 +19,13 @@ public class Pause : MonoBehaviour
     [SerializeField] private GameObject botonInvencibilidadOn;
     [SerializeField] private GameObject botonAutoOff;
     [SerializeField] private GameObject botonAutoOn;
+    [SerializeField] private GameObject botonSonidoOn;
+    [SerializeField] private GameObject botonSonidoOff;
     // Update is called once per frame
+    AudioManager audioManager;
+    private void Awake() {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -43,6 +49,7 @@ public class Pause : MonoBehaviour
     {
         if (estado == Estados.Juego)
         {
+            audioManager.musicSource.Pause();
             escPushed = true;
             estado = Estados.Pausa;
             Time.timeScale = 0f;
@@ -52,6 +59,7 @@ public class Pause : MonoBehaviour
 
     public void Reanudar()
     {
+        audioManager.musicSource.UnPause();
         Time.timeScale = 1f;
         escPushed = true;
         estado = Estados.Juego;
@@ -60,6 +68,8 @@ public class Pause : MonoBehaviour
 
     public void Reiniciar()
     {
+        audioManager.PlayMusic(audioManager.mainTheme);
+        Player.reinicio = true;
         PlayerPrefs.SetInt("HP", 3);
         Time.timeScale = 1f;
         escPushed = true;
@@ -114,6 +124,18 @@ public class Pause : MonoBehaviour
         Player.auto = false;
         botonAutoOff.SetActive(true);
         botonAutoOn.SetActive(false);
+    }
+
+    public void Mutear(){
+        botonSonidoOn.SetActive(false);
+        botonSonidoOff.SetActive(true);
+        AudioManager.instance.ToggleMute();
+    }
+    public void DesMutear()
+    {
+        botonSonidoOn.SetActive(true);
+        botonSonidoOff.SetActive(false);
+        AudioManager.instance.ToggleMute();
     }
     public enum Estados
     {

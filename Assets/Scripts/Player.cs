@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public static int Monedas = 0; //Variable que lleva la cuenta de las monedas
     public static bool invencible = false; //Variable que controla si el jugador es invencible o no
     public static bool auto = false; //Variable de control del modo de acciones automatico
+    public static bool reinicio = false;
     private Animator animator;
     public Vector3 posicionInicial;
     [SerializeField] private float secsInvencible; //Segundos de duración de la invencibilidad
@@ -41,9 +42,7 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer picoSprite;  // Asignar el objeto con el sprite del pico
     [SerializeField] private float tiempoMostrarPico = 0.5f;
 
-    [SerializeField] private AudioClip sonidoPico; // Sonido da picareta
-    private AudioSource audioSource; // audio
-
+    
     
     [SerializeField] private float tiempoEntreCavados = 0.2f; // Tiempo en segundos
     private float proximoCavado = 0f;
@@ -62,6 +61,11 @@ public class Player : MonoBehaviour
     public static string lastDoorID;
 
     private ScreenFlash screenFlash;
+
+    AudioManager audioManager;
+    private void Awake() {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
 
     void Start()
     {
@@ -91,14 +95,13 @@ public class Player : MonoBehaviour
         tilemap = FindObjectOfType<Tilemap>();
         picoSprite.enabled = false;
         
-        // Inicializar o AudioSource
-        audioSource = GetComponent<AudioSource>();
+
         
         hp = PlayerPrefs.GetInt("HP", 3);
         animator = GetComponentInChildren<Animator>();
         animator.SetBool("Andando", false);
         // Si hay un ID de puerta guardado, intenta encontrar esa puerta y posicionar al jugador en ella
-        if (!string.IsNullOrEmpty(lastDoorID))
+        if (!string.IsNullOrEmpty(lastDoorID) && !reinicio)
         {
             Door entranceDoor = FindDoorByID(lastDoorID);
             if (entranceDoor != null)
@@ -107,6 +110,7 @@ public class Player : MonoBehaviour
                 transform.position = entranceDoor.transform.position;
             }
         }
+        reinicio = false;
         screenFlash = FindObjectOfType<ScreenFlash>();
     }
 
@@ -315,6 +319,7 @@ public class Player : MonoBehaviour
             {
                 if (hit.collider.gameObject.tag == "Enemy")
                 {
+                    audioManager.PlaySFX(audioManager.hit);
                     Destroy(hit.collider.gameObject);
                 }
 
@@ -331,17 +336,11 @@ public class Player : MonoBehaviour
                     {
                         // Mostrar el pico en la posición adecuada
                         StartCoroutine(MostrarPico(direccion));
-
-                        // Tocar o som da picareta
-                        if (sonidoPico != null && audioSource != null)
-                        {
-                            audioSource.PlayOneShot(sonidoPico);
-                        }
-
-                        
+                      
                         // Eliminamos el tile (romper el bloque)
                         tilemap.SetTile(cellPosition, null);
                         tilemap.RefreshTile(cellPosition);
+                        audioManager.PlaySFX(audioManager.cavar);
                     }
                 }
 
@@ -408,9 +407,11 @@ public class Player : MonoBehaviour
         switch (hp)
         {
             case 2:
+                audioManager.PlaySFX(audioManager.death);
                 PlayerPrefs.SetInt("HP", hp);
                 break;
             case 1:
+                audioManager.PlaySFX(audioManager.death);
                 PlayerPrefs.SetInt("HP", hp);
                 break;
             case 0:
@@ -437,9 +438,11 @@ public class Player : MonoBehaviour
 
     public void CollectDiamond(float time)
     {
+        audioManager.PlaySFX(audioManager.diamante);
         WithDiamond = true;
         countdownTime = time;
         StartCoroutine(StartCountdown());
+        audioManager.PlayMusic(audioManager.CountdownTheme);
     }
     private IEnumerator StartCountdown()
     {
@@ -478,6 +481,8 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
+        audioManager.musicSource.Pause();
+        audioManager.PlaySFX(audioManager.gameOver);
         if(GameOver == null){
             Transform hijoCanvas = transform.Find("PantallaGameOver");
             GameOver = hijoCanvas.gameObject;
