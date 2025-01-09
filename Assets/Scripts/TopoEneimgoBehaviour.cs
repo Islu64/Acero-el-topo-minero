@@ -12,22 +12,22 @@ public class TopoEneimgoBehaviour : MonoBehaviour
     [Header("Movimiento")]
     [SerializeField] private float moveSpeed = 2f;  // Velocidad de movimiento
 
-    [Header("Detección de suelo y paredes")]
+    [Header("Detecciï¿½n de suelo y paredes")]
     [SerializeField] private Transform controladorBorde;   // Punto al frente hacia abajo para detectar el fin del suelo
     [SerializeField] private Transform controladorPared;   // Punto frontal para detectar paredes
     [SerializeField] private LayerMask queEsSuelo;         // Capa que se considera suelo/pared
-    [SerializeField] private Vector2 dimensionesCajaSuelo; // Dimensiones del área que detecta el borde del suelo
-    [SerializeField] private Vector2 dimensionesCajaPared; // Dimensiones del área que detecta la pared
+    [SerializeField] private Vector2 dimensionesCajaSuelo; // Dimensiones del ï¿½rea que detecta el borde del suelo
+    [SerializeField] private Vector2 dimensionesCajaPared; // Dimensiones del ï¿½rea que detecta la pared
 
-    [Header("Detección del personaje")]
+    [Header("Detecciï¿½n del personaje")]
     [SerializeField] private Transform controladorVision;  // Punto para detectar al personaje
-    [SerializeField] private Vector2 dimensionesCajaVision; // Dimensiones del área de detección del personaje
+    [SerializeField] private Vector2 dimensionesCajaVision; // Dimensiones del ï¿½rea de detecciï¿½n del personaje
     [SerializeField] private LayerMask queEsPersonaje;     // Capa del personaje
 
     [Header("Disparo")]
     [SerializeField] private GameObject proyectilPrefab;   // Prefab del proyectil
     [SerializeField] private Transform puntoDisparo;       // Punto desde donde se dispara
-    [SerializeField] private float tiempoEntreDisparos = 3f; // Tiempo entre disparos
+    [SerializeField] private float tiempoEntreDisparos = 5f; // Tiempo entre disparos
 
     private bool haySueloAdelante;
     private bool hayParedAdelante;
@@ -45,7 +45,7 @@ public class TopoEneimgoBehaviour : MonoBehaviour
         // Comprobar si hay pared adelante
         hayParedAdelante = Physics2D.OverlapBox(controladorPared.position, dimensionesCajaPared, 0f, queEsSuelo);
 
-        // Comprobar si el personaje está en el campo de visión
+        // Comprobar si el personaje estï¿½ en el campo de visiï¿½n
         detectandoPersonaje = Physics2D.OverlapBox(controladorVision.position, dimensionesCajaVision, 0f, queEsPersonaje);
 
         if (detectandoPersonaje)
@@ -53,7 +53,7 @@ public class TopoEneimgoBehaviour : MonoBehaviour
             // Si detecta al personaje, se queda quieto y dispara
             rigid.velocity = Vector2.zero;
 
-            if (Time.time >= tiempoDisparo + tiempoEntreDisparos)
+            if ((Time.time >= tiempoDisparo + tiempoEntreDisparos) || Time.time == 0)
             {
                 Disparar();
                 tiempoDisparo = Time.time;
@@ -77,12 +77,12 @@ public class TopoEneimgoBehaviour : MonoBehaviour
         // Crear el proyectil
         GameObject proyectil = Instantiate(proyectilPrefab, puntoDisparo.position, Quaternion.identity);
 
-        // Configurar la dirección del proyectil
+        // Configurar la direcciï¿½n del proyectil
         Rigidbody2D rbProyectil = proyectil.GetComponent<Rigidbody2D>();
         float direccion = mirandoDerecha ? 1f : -1f;
         rbProyectil.velocity = new Vector2(direccion * 5f, 0f); // Velocidad del proyectil
 
-        // Destruir el proyectil después de 5 segundos
+        // Destruir el proyectil despuï¿½s de 5 segundos
         Destroy(proyectil, 5f);
     }
 
@@ -102,7 +102,7 @@ public class TopoEneimgoBehaviour : MonoBehaviour
         }
     }
 
-    // Función para visualizar las áreas de detección
+    // Funciï¿½n para visualizar las ï¿½reas de detecciï¿½n
     private void OnDrawGizmos()
     {
         if (controladorBorde != null)

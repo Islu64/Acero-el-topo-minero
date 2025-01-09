@@ -12,6 +12,7 @@ TagManager:
   - Coin
   - Obstacle
   - Audio
+  - Proyectil
   layers:
   - Default
   - TransparentFX

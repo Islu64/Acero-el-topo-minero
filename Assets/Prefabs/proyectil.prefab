@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: -8219728204383489142}
   - component: {fileID: 9050289282754651072}
   - component: {fileID: 120987726110177940}
+  - component: {fileID: -7965219320446086178}
   m_Layer: 0
   m_Name: proyectil
-  m_TagString: Untagged
+  m_TagString: Proyectil
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -162,3 +163,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-7965219320446086178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574248485513423204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc1adad66e25eb94db4c793e72298f88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

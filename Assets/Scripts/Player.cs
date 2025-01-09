@@ -361,8 +361,11 @@ public class Player : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Enemy") && !invencible)
+        if ((collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Proyectil"))&& !invencible)
         {
+            if(collision.gameObject.CompareTag("Proyectil")){
+                Destroy(collision.gameObject);
+            }
             if (hp > 1)
             {
                 PerderVida();

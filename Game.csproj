@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\Door.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\EndGameDoor.cs" />
+    <Compile Include="Assets\Scripts\Proyectil.cs" />
     <Compile Include="Assets\Scripts\Pause.cs" />
     <Compile Include="Assets\Scripts\WaterSpawner.cs" />
   </ItemGroup>
