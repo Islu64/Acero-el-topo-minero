@@ -137,6 +137,17 @@ public class Pause : MonoBehaviour
         botonSonidoOff.SetActive(false);
         AudioManager.instance.ToggleMute();
     }
+    
+   public void VolverAlMenuPrincipal()
+   {
+        Time.timeScale = 1f; 
+        // Cargar la escena del menú principal
+        SceneManager.LoadScene("MenuPrincipal"); 
+        Destroy(GameObject.FindWithTag("Audio"));
+        Destroy(gameObject);
+        PantallaPausa.SetActive(false);
+   }
+
     public enum Estados
     {
         Juego,
