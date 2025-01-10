@@ -23,7 +23,10 @@ public class Player : MonoBehaviour
     [SerializeField] public float suavizadoDeMovimiento;
     public Vector3 velocidad = Vector3.zero;
     public bool mirandoDerecha = true;
+    public bool canShoot = false; // controla se el jugador puede disparar
 
+    public GameObject gun, bulletPrefab;
+    
     [Header("Salto")]
     [SerializeField] public float fuerzaDeSalto;
     [SerializeField] private LayerMask queEsSuelo;
@@ -95,6 +98,7 @@ public class Player : MonoBehaviour
         tilemap = FindObjectOfType<Tilemap>();
         picoSprite.enabled = false;
         
+        canShoot = true; // ahora puede disparar!!
 
         
         hp = PlayerPrefs.GetInt("HP", 3);
@@ -171,6 +175,25 @@ public class Player : MonoBehaviour
         {
             proximoCavado = Time.time + tiempoEntreCavados;
             Cavar();
+        }
+
+        if (canShoot && Input.GetKeyDown(KeyCode.E))
+        {
+            // Crear la bala en la posición del arma y dispararla en la dirección adecuada
+            GameObject bullet = Instantiate(bulletPrefab, gun.transform.position, Quaternion.identity);
+            Bullet balaScript = bullet.GetComponent<Bullet>();
+
+            // Configurar la dirección de disparo basada en hacia dónde está mirando el personaje
+            if (!mirandoDerecha)
+            {
+                balaScript.targetVector = Vector2.left;
+            }
+            else
+            {
+                balaScript.targetVector = Vector2.right;
+            }
+
+            // audioManager.PlaySFX(audioManager.pew); // Reproducir un sonido de disparo
         }
 
     }
@@ -319,8 +342,9 @@ public class Player : MonoBehaviour
             {
                 if (hit.collider.gameObject.tag == "Enemy")
                 {
-                    audioManager.PlaySFX(audioManager.hit);
-                    Destroy(hit.collider.gameObject);
+                    //audioManager.PlaySFX(audioManager.hit);
+                    //Destroy(hit.collider.gameObject);
+                    return;
                 }
 
                 else
@@ -359,10 +383,13 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(tiempoMostrarPico);
         picoSprite.enabled = false;
     }
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        
         if ((collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Proyectil"))&& !invencible)
         {
+            
             if(collision.gameObject.CompareTag("Proyectil")){
                 Destroy(collision.gameObject);
             }
@@ -514,6 +541,8 @@ public class Player : MonoBehaviour
         }
     }
 
+    
+    
     public void ReiniciarPos()
     {
         transform.position = posicionInicial;
