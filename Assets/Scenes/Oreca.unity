@@ -6103,6 +6103,9 @@ MonoBehaviour:
   suavizadoDeMovimiento: 0.2
   velocidad: {x: 0, y: 0, z: 0}
   mirandoDerecha: 1
+  canShoot: 0
+  gun: {fileID: 949997123}
+  bulletPrefab: {fileID: 8656378575191851573, guid: 29cf4f3e7bbd4f945bc2dcda49320491, type: 3}
   fuerzaDeSalto: 500
   queEsSuelo:
     serializedVersion: 2
@@ -6166,6 +6169,7 @@ Transform:
   m_Children:
   - {fileID: 1603385859}
   - {fileID: 163290128}
+  - {fileID: 949997124}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &890934763
@@ -6317,6 +6321,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fa2bbbd18855e0a4782864dd58677298, type: 3}
+--- !u!1 &949997123
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 949997124}
+  m_Layer: 0
+  m_Name: BulletSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &949997124
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949997123}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1747.0801, y: -0.39999485, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 890934762}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &951410142
 PrefabInstance:
   m_ObjectHideFlags: 0
