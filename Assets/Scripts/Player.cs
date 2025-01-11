@@ -67,11 +67,11 @@ public class Player : MonoBehaviour
     private ScreenFlash screenFlash;
 
     AudioManager audioManager;
+
     private void Awake()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
-
     void Start()
     {
         if (!PlayerPrefs.HasKey("InitialPositionX") || !PlayerPrefs.HasKey("InitialPositionY") || !PlayerPrefs.HasKey("InitialPositionZ"))
@@ -342,8 +342,8 @@ public class Player : MonoBehaviour
             {
                 if (hit.collider.gameObject.tag == "Enemy")
                 {
-                    //audioManager.PlaySFX(audioManager.hit);
-                    //Destroy(hit.collider.gameObject);
+                    audioManager.PlaySFX(audioManager.hit);
+                    Destroy(hit.collider.gameObject);
                     return;
                 }
 

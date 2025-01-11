@@ -6099,6 +6099,10 @@ MonoBehaviour:
   GameOver: {fileID: 0}
   movimientoHorizontal: 0
   hp: 3
+  hearts:
+  - {fileID: 741963824}
+  - {fileID: 273365836}
+  - {fileID: 370315778}
   moveSpeed: 400
   suavizadoDeMovimiento: 0.2
   velocidad: {x: 0, y: 0, z: 0}

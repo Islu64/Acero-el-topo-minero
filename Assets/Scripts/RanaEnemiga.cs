@@ -6,28 +6,29 @@ public class RanaEnemiga : MonoBehaviour
 
     [Header("Movimiento")]
     [SerializeField] private float moveSpeed = 2f;    // Velocidad horizontal
-    private bool mirandoDerecha = false;             // Hacia dónde mira (y se desplaza)
+    private bool mirandoDerecha = false;             // Hacia dï¿½nde mira (y se desplaza)
 
     [Header("Salto")]
     [SerializeField] private float jumpForce = 5f;   // Fuerza del salto
     [SerializeField] private float tiempoEntreSaltos = 2f; // Frecuencia de saltos
-    private float proximoSalto = 0f;                 // Momento en que podrá volver a saltar
+    private float proximoSalto = 0f;                 // Momento en que podrï¿½ volver a saltar
 
-    [Header("Detección de pared (hijo con Collider2D)")]
-    [SerializeField] private Transform controladorPared;  // Objeto hijo para detección de pared
+    [Header("Detecciï¿½n de pared (hijo con Collider2D)")]
+    [SerializeField] private Transform controladorPared;  // Objeto hijo para detecciï¿½n de pared
     [SerializeField] private LayerMask queEsSuelo;        // Capa del suelo/pared
     private Collider2D paredCollider;
     private bool hayParedAdelante;
 
-    [Header("Detección de suelo (hijo con Collider2D)")]
-    [SerializeField] private Transform controladorSuelo;  // Objeto hijo para detección de suelo
+    [Header("Detecciï¿½n de suelo (hijo con Collider2D)")]
+    [SerializeField] private Transform controladorSuelo;  // Objeto hijo para detecciï¿½n de suelo
     private Collider2D sueloCollider;
-    private bool enSuelo;                                 // Si el enemigo está sobre el suelo
+    private bool enSuelo;                                 // Si el enemigo estï¿½ sobre el suelo
+    private Animator animator;
 
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
-
+        animator = GetComponentInChildren<Animator>();
         // Obtenemos el collider del controlador de pared
         if (controladorPared != null)
             paredCollider = controladorPared.GetComponent<Collider2D>();
@@ -60,7 +61,7 @@ public class RanaEnemiga : MonoBehaviour
         float mover = mirandoDerecha ? moveSpeed : -moveSpeed;
         rigid.velocity = new Vector2(mover, rigid.velocity.y);
 
-        // 4) Detectar si está en el suelo
+        // 4) Detectar si estÃ¡ en el suelo
         if (sueloCollider != null)
         {
             enSuelo = Physics2D.OverlapBox(
@@ -71,13 +72,20 @@ public class RanaEnemiga : MonoBehaviour
             );
         }
 
-        // 5) Saltar cada X segundos, **solo si** está en el suelo
+        // 5) Saltar cada X segundos, solo si estÃ¡ en el suelo
+        //    (AquÃ­ NO forzamos animator.SetBool en este momento)
         if (Time.time >= proximoSalto && enSuelo)
         {
             rigid.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             proximoSalto = Time.time + tiempoEntreSaltos;
         }
+
+        // 6) Actualizar la animaciÃ³n de â€œSaltandoâ€
+        animator.SetBool("Saltando", !enSuelo);
+        Debug.Log("Time: " + Time.time + ", PrÃ³ximo Salto: " + proximoSalto);
+        Debug.Log("enSuelo? " + enSuelo + " en tiempo: " + Time.time);
     }
+
 
     private void Girar()
     {
@@ -89,14 +97,14 @@ public class RanaEnemiga : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Si colisiona con otro enemigo, también gira
+        // Si colisiona con otro enemigo, tambiï¿½n gira
         if (collision.gameObject.CompareTag("Enemy"))
         {
             Girar();
         }
         else if (collision.gameObject.CompareTag("Player"))
         {
-            // Verificar si el objeto "acero" está cayendo en la cabeza
+            // Verificar si el objeto "acero" estï¿½ cayendo en la cabeza
             if (collision.contacts[0].point.y > transform.position.y + 0.35f)
             {
                 Morir();
@@ -109,7 +117,7 @@ public class RanaEnemiga : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // Dibujamos las cajas de detección en la escena (vista de Editor)
+    // Dibujamos las cajas de detecciï¿½n en la escena (vista de Editor)
     private void OnDrawGizmos()
     {
         // Pared

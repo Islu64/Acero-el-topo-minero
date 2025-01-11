@@ -238,7 +238,7 @@ GameObject:
   - component: {fileID: 763481817045260353}
   - component: {fileID: 8507937657569692395}
   m_Layer: 0
-  m_Name: Cave Slime_0
+  m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
