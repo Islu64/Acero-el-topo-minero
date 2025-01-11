@@ -422,7 +422,7 @@ GameObject:
   - component: {fileID: 5758386210560951140}
   - component: {fileID: 5245905197533790242}
   m_Layer: 4
-  m_Name: TopoEnemigo 1
+  m_Name: TopoEnemigo
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
