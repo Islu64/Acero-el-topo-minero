@@ -94,6 +94,19 @@ public class RanaEnemiga : MonoBehaviour
         {
             Girar();
         }
+        else if (collision.gameObject.CompareTag("Player"))
+        {
+            // Verificar si el objeto "acero" está cayendo en la cabeza
+            if (collision.contacts[0].point.y > transform.position.y + 0.35f)
+            {
+                Morir();
+            }
+        }
+    }
+
+    private void Morir()
+    {
+        Destroy(gameObject);
     }
 
     // Dibujamos las cajas de detección en la escena (vista de Editor)

@@ -51,7 +51,23 @@ public class Worm : MonoBehaviour
         {
             Girar();
         }
+        else if (collision.gameObject.CompareTag("Player"))
+        {
+            // Verificar si el objeto "acero" está cayendo en la cabeza
+            if (collision.contacts[0].point.y > transform.position.y + 0.35f) 
+            {
+                Morir();
+            }
+        }
     }
+
+
+    private void Morir()
+    {
+        // Aquí puedes agregar efectos de muerte o animaciones
+        Destroy(gameObject);
+    }
+
 
     private void Girar()
     {

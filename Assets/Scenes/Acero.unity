@@ -8610,7 +8610,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1.8, y: -3.1}
+  m_AnchoredPosition: {x: 1.8, y: -2.833}
   m_SizeDelta: {x: 800, y: 537.25854}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &890934757
@@ -16823,7 +16823,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Pulsa E para \nmatar enemigos"
+  m_text: 'Para matar enemigos,
+
+    pulsa E o salta
+
+    sobre ellos'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}

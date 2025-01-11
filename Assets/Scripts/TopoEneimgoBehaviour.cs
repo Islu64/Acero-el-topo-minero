@@ -141,6 +141,19 @@ public class TopoEneimgoBehaviour : MonoBehaviour
         {
             Girar();
         }
+        else if (collision.gameObject.CompareTag("Player"))
+        {
+            // Verificar si el objeto "acero" está cayendo en la cabeza
+            if (collision.contacts[0].point.y > transform.position.y + 0.35f)
+            {
+                Morir();
+            }
+        }
+    }
+
+    private void Morir()
+    {
+        Destroy(gameObject);
     }
 
     // Visualización de las áreas de detección

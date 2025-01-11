@@ -387,7 +387,7 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
-        if ((collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Proyectil")) && !invencible)
+        if (((collision.gameObject.CompareTag("Enemy") && (collision.contacts[0].point.y <= collision.gameObject.transform.position.y + 0.35)) || collision.gameObject.CompareTag("Proyectil")) && !invencible)
         {
 
             if (collision.gameObject.CompareTag("Proyectil"))
