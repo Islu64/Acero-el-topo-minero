@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     [Header("Movimiento")]
     public float movimientoHorizontal = 0f;
     public int hp = 3;//Vidas del personaje
+    [SerializeField] private GameObject[] hearts;
     [SerializeField] public float moveSpeed; //Velocidad de movimiento
     [SerializeField] public float suavizadoDeMovimiento;
     public Vector3 velocidad = Vector3.zero;
@@ -26,7 +27,7 @@ public class Player : MonoBehaviour
     public bool canShoot = false; // controla se el jugador puede disparar
 
     public GameObject gun, bulletPrefab;
-    
+
     [Header("Salto")]
     [SerializeField] public float fuerzaDeSalto;
     [SerializeField] private LayerMask queEsSuelo;
@@ -45,8 +46,8 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer picoSprite;  // Asignar el objeto con el sprite del pico
     [SerializeField] private float tiempoMostrarPico = 0.5f;
 
-    
-    
+
+
     [SerializeField] private float tiempoEntreCavados = 0.2f; // Tiempo en segundos
     private float proximoCavado = 0f;
 
@@ -66,7 +67,8 @@ public class Player : MonoBehaviour
     private ScreenFlash screenFlash;
 
     AudioManager audioManager;
-    private void Awake() {
+    private void Awake()
+    {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
@@ -89,19 +91,17 @@ public class Player : MonoBehaviour
             float z = PlayerPrefs.GetFloat("InitialPositionZ");
             posicionInicial = new Vector3(x, y, z);
         }
-        if (!PlayerPrefs.HasKey("HP"))
-        {
-            PlayerPrefs.SetInt("HP", 3); // Establecer la vida inicial si no existe
-        }
         
+
         rigid = GetComponent<Rigidbody2D>();
         tilemap = FindObjectOfType<Tilemap>();
         picoSprite.enabled = false;
-        
+
         canShoot = true; // ahora puede disparar!!
 
+
         
-        hp = PlayerPrefs.GetInt("HP", 3);
+        ActualizarCorazones();
         animator = GetComponentInChildren<Animator>();
         animator.SetBool("Andando", false);
         // Si hay un ID de puerta guardado, intenta encontrar esa puerta y posicionar al jugador en ella
@@ -132,7 +132,7 @@ public class Player : MonoBehaviour
         {
             animator.SetBool("Andando", false);
         }
-        DibujarVida();
+        ActualizarCorazones();
         if (Input.GetButtonDown("Jump"))
         {
             animator.SetBool("Saltando", true);
@@ -360,7 +360,7 @@ public class Player : MonoBehaviour
                     {
                         // Mostrar el pico en la posición adecuada
                         StartCoroutine(MostrarPico(direccion));
-                      
+
                         // Eliminamos el tile (romper el bloque)
                         tilemap.SetTile(cellPosition, null);
                         tilemap.RefreshTile(cellPosition);
@@ -383,14 +383,15 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(tiempoMostrarPico);
         picoSprite.enabled = false;
     }
-    
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        
-        if ((collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Proyectil"))&& !invencible)
+
+        if ((collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Proyectil")) && !invencible)
         {
-            
-            if(collision.gameObject.CompareTag("Proyectil")){
+
+            if (collision.gameObject.CompareTag("Proyectil"))
+            {
                 Destroy(collision.gameObject);
             }
             if (hp > 1)
@@ -434,24 +435,42 @@ public class Player : MonoBehaviour
     public void PerderVida()
     {
         hp--;
+        // Guardar en PlayerPrefs, si así lo deseas
+        PlayerPrefs.SetInt("HP", hp);
+        PlayerPrefs.Save();
+
+        // Llamamos a ActualizarCorazones para que oculte (desactive) el sprite que corresponda
+        ActualizarCorazones();
+
         switch (hp)
         {
             case 2:
                 audioManager.PlaySFX(audioManager.death);
-                PlayerPrefs.SetInt("HP", hp);
                 break;
             case 1:
                 audioManager.PlaySFX(audioManager.death);
-                PlayerPrefs.SetInt("HP", hp);
                 break;
             case 0:
-                PlayerPrefs.SetInt("HP", 3);
+                PlayerPrefs.SetInt("HP", 3); // Reinicia la vida a 3
                 Monedas = 0;
                 Die();
                 break;
-
         }
     }
+
+    public void GanarVida(int healAmount)
+    {
+        hp += healAmount;
+        // Asegúrate de no pasar el máximo
+        hp = Mathf.Min(hp, hearts.Length);
+
+        PlayerPrefs.SetInt("HP", hp);
+        PlayerPrefs.Save();
+
+        // Vuelve a dibujar/actualizar corazones
+        ActualizarCorazones();
+    }
+
 
     private Door FindDoorByID(string id)
     {
@@ -513,7 +532,8 @@ public class Player : MonoBehaviour
     {
         audioManager.musicSource.Pause();
         audioManager.PlaySFX(audioManager.gameOver);
-        if(GameOver == null){
+        if (GameOver == null)
+        {
             Transform hijoCanvas = transform.Find("PantallaGameOver");
             GameOver = hijoCanvas.gameObject;
         }
@@ -525,24 +545,23 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireCube(controladorSuelo.position, dimensionesCaja);
     }
 
-    private void DibujarVida()
+    private void ActualizarCorazones()
     {
-        switch (hp)
-        {
-            default: break;
-            case 2:
-                Destroy(GameObject.FindGameObjectWithTag("HP2"));
-                break;
-            case 1:
-                Destroy(GameObject.FindGameObjectWithTag("HP2"));
-                Destroy(GameObject.FindGameObjectWithTag("HP1"));
-                break;
+        // Primero, forzamos un límite (suponiendo que el máximo de HP es la cantidad de corazones)
+        hp = Mathf.Clamp(hp, 0, hearts.Length);
 
+        // Recorre todos los corazones y los activa o desactiva según la vida actual
+        for (int i = 0; i < hearts.Length; i++)
+        {
+            if (i < hp)
+                hearts[i].SetActive(true);
+            else
+                hearts[i].SetActive(false);
         }
     }
 
-    
-    
+
+
     public void ReiniciarPos()
     {
         transform.position = posicionInicial;
