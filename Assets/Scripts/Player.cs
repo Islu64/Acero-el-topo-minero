@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
 {
     public Rigidbody2D rigid;
     public static int Monedas = 0; //Variable que lleva la cuenta de las monedas
+    public static bool invencibletemp = false; //Variable que controla si el jugador es invencible o no
     public static bool invencible = false; //Variable que controla si el jugador es invencible o no
     public static bool auto = false; //Variable de control del modo de acciones automatico
     public static bool reinicio = false;
@@ -37,7 +38,7 @@ public class Player : MonoBehaviour
     public bool salto = false;
 
     [Header("Cavar")]
-    [SerializeField] private float distanciaCavar = 1.0f;  // Distancia del raycast para cavar
+    [SerializeField] private float distanciaCavar = 10.0f;  // Distancia del raycast para cavar
     [SerializeField] private LayerMask capaDeBloques;  // Para identificar los bloques de suelo
     public Tilemap tilemap;
     private Vector3Int lastHighlightedCell;  // Para almacenar la última celda iluminada
@@ -75,7 +76,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         Monedas = 0;
-        
+
         if (!PlayerPrefs.HasKey("InitialPositionX") || !PlayerPrefs.HasKey("InitialPositionY") || !PlayerPrefs.HasKey("InitialPositionZ"))
         {
             // Guardar la primera posición inicial si no está guardada
@@ -177,25 +178,6 @@ public class Player : MonoBehaviour
         {
             proximoCavado = Time.time + tiempoEntreCavados;
             Cavar();
-        }
-
-        if (canShoot && Input.GetKeyDown(KeyCode.E))
-        {
-            // Crear la bala en la posición del arma y dispararla en la dirección adecuada
-            GameObject bullet = Instantiate(bulletPrefab, gun.transform.position, Quaternion.identity);
-            Bullet balaScript = bullet.GetComponent<Bullet>();
-
-            // Configurar la dirección de disparo basada en hacia dónde está mirando el personaje
-            if (!mirandoDerecha)
-            {
-                balaScript.targetVector = Vector2.left;
-            }
-            else
-            {
-                balaScript.targetVector = Vector2.right;
-            }
-
-            // audioManager.PlaySFX(audioManager.pew); // Reproducir un sonido de disparo
         }
 
     }
@@ -370,7 +352,6 @@ public class Player : MonoBehaviour
                     }
                 }
 
-
             }
         }
 
@@ -389,7 +370,7 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
-        if (((collision.gameObject.CompareTag("Enemy") && (collision.contacts[0].point.y <= collision.gameObject.transform.position.y + 0.35)) || collision.gameObject.CompareTag("Proyectil")) && !invencible)
+        if (((collision.gameObject.CompareTag("Enemy") && (collision.contacts[0].point.y <= collision.gameObject.transform.position.y + 0.35)) || collision.gameObject.CompareTag("Proyectil")) && (!invencible && !invencibletemp))
         {
 
             if (collision.gameObject.CompareTag("Proyectil"))
@@ -462,6 +443,7 @@ public class Player : MonoBehaviour
 
     public void GanarVida(int healAmount)
     {
+        audioManager.PlaySFX(audioManager.vida);
         hp += healAmount;
         // Asegúrate de no pasar el máximo
         hp = Mathf.Min(hp, hearts.Length);
@@ -512,9 +494,9 @@ public class Player : MonoBehaviour
 
     private IEnumerator InvencibilidadTemporal()
     {
-        invencible = true;
+        invencibletemp = true;
         yield return new WaitForSeconds(secsInvencible);
-        invencible = false;
+        invencibletemp = false;
     }
 
     [SerializeField] private float frecuenciaParpadeo = 0.2f; // Frecuencia en segundos del parpadeo
@@ -522,7 +504,7 @@ public class Player : MonoBehaviour
     private IEnumerator ParpadeoInvencible()
     {
         SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();// Asumimos que el SpriteRenderer está en el mismo objeto
-        while (invencible)
+        while (invencibletemp)
         {
             spriteRenderer.enabled = !spriteRenderer.enabled; // Cambia el estado del sprite
             yield return new WaitForSeconds(frecuenciaParpadeo); // Espera el tiempo de parpadeo
@@ -532,13 +514,29 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
-        audioManager.musicSource.Pause();
+        audioManager.musicSource.Stop();
         audioManager.PlaySFX(audioManager.gameOver);
         if (GameOver == null)
         {
-            Transform hijoCanvas = transform.Find("PantallaGameOver");
-            GameOver = hijoCanvas.gameObject;
+            // Encuentra el Canvas
+            GameObject canvas = GameObject.Find("Canvas");
+            if (canvas != null)
+            {
+                // Busca la pantalla de Game Over como hijo del Canvas
+                Transform hijoGameOver = canvas.transform.Find("PantallaGameOver");
+                if (hijoGameOver != null)
+                {
+                    GameOver = hijoGameOver.gameObject;
+                }
+            }
+            
+            if (GameOver == null)
+            {
+                Debug.LogError("No se encontró la pantalla de Game Over dentro del Canvas");
+                return;
+            }
         }
+        Time.timeScale = 0f;
         GameOver.SetActive(true);
     }
     private void OnDrawGizmos()

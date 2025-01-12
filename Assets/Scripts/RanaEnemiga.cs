@@ -24,7 +24,10 @@ public class RanaEnemiga : MonoBehaviour
     private Collider2D sueloCollider;
     private bool enSuelo;                                 // Si el enemigo est� sobre el suelo
     private Animator animator;
-
+    AudioManager audioManager;
+    private void Awake() {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -82,8 +85,6 @@ public class RanaEnemiga : MonoBehaviour
 
         // 6) Actualizar la animación de “Saltando”
         animator.SetBool("Saltando", !enSuelo);
-        Debug.Log("Time: " + Time.time + ", Próximo Salto: " + proximoSalto);
-        Debug.Log("enSuelo? " + enSuelo + " en tiempo: " + Time.time);
     }
 
 
@@ -107,6 +108,7 @@ public class RanaEnemiga : MonoBehaviour
             // Verificar si el objeto "acero" est� cayendo en la cabeza
             if (collision.contacts[0].point.y > transform.position.y + 0.35f)
             {
+                audioManager.PlaySFX(audioManager.hit);
                 Morir();
             }
         }

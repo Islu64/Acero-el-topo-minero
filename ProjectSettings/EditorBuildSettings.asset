@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/MenuPrincipal.unity
+    guid: a9bc4439044cfd642a35b7ce91dbd487
+  - enabled: 1
     path: Assets/Scenes/Acero.unity
     guid: 7c1662f3194ef9349818442d2b071706
   - enabled: 1
@@ -17,4 +20,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Secreto.unity
     guid: 72bd8864af4a00b4d98dc64e8d7fbd68
+  - enabled: 1
+    path: Assets/Scenes/AceroCuentaAtras.unity
+    guid: 530ee420d9fb19144820a1b886431c93
+  - enabled: 1
+    path: Assets/Scenes/Secret2.unity
+    guid: 05ff5534f5b73a6449cc634785532f93
+  - enabled: 1
+    path: Assets/Scenes/AceroAlReves.unity
+    guid: 9bd0c32e94d12c043807a71c009839af
   m_configObjects: {}

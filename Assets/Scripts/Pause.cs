@@ -71,7 +71,6 @@ public class Pause : MonoBehaviour
         audioManager.PlayMusic(audioManager.mainTheme);
         Player.reinicio = true;
         PlayerPrefs.SetInt("HP", 3);
-        Time.timeScale = 1f;
         escPushed = true;
         estado = Estados.Juego;
         PantallaPausa.SetActive(false);
@@ -82,6 +81,7 @@ public class Pause : MonoBehaviour
         Player.Monedas = 0;
         SceneManager.LoadScene("Acero");
         player.ReiniciarPos();
+        Time.timeScale = 1f;
     }
 
     public void AbrirMenuConfig()

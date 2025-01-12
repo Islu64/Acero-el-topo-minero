@@ -31,7 +31,7 @@ public class CoinManager : MonoBehaviour
     // Este método se llama cada vez que se carga una nueva escena
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (coinText == null)
+        if (coinText == null && scene.name != "MenuPrincipal")
         {
             // Asignamos las referencias de los objetos UI cuando la escena se cargue
             coinText = GameObject.Find("CoinText").GetComponent<TextMeshProUGUI>();

@@ -17,6 +17,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip gameOver;
     public AudioClip diamante;
     public AudioClip puerta;
+    public AudioClip vida;
 
     private bool isMuted = false;
     public static AudioManager instance;

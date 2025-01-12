@@ -33,7 +33,10 @@ public class TopoEneimgoBehaviour : MonoBehaviour
     private Collider2D bordeCollider;
     private Collider2D paredCollider;
     private Collider2D visionCollider;
-
+    AudioManager audioManager;
+    private void Awake() {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -146,6 +149,7 @@ public class TopoEneimgoBehaviour : MonoBehaviour
             // Verificar si el objeto "acero" está cayendo en la cabeza
             if (collision.contacts[0].point.y > transform.position.y + 0.35f)
             {
+                audioManager.PlaySFX(audioManager.hit);
                 Morir();
             }
         }

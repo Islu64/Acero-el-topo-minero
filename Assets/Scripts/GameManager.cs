@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public float countdownTime = 60f;         // Tiempo total de cuenta atr�s
+    public float countdownTime = 100f;         // Tiempo total de cuenta atr�s
     public TextMeshProUGUI countdownText;     // Texto de la cuenta atr�s en UI
     public ScreenFlash screenFlash;           // Referencia al script ScreenFlash
 
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     // Este método se llama cada vez que se carga una nueva escena
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (countdownText == null && screenFlash == null)
+        if ((countdownText == null && screenFlash == null) && scene.name!="MenuPrincipal")
         {
             // Asignamos las referencias de los objetos UI cuando la escena se cargue
             countdownText = GameObject.Find("ContadorTiempo").GetComponent<TextMeshProUGUI>();

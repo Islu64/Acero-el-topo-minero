@@ -1,5 +1,5 @@
 using UnityEngine;
-using TMPro; // Usar esto si estás utilizando TextMeshPro
+using TMPro; // Usar esto si estï¿½s utilizando TextMeshPro
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.Tilemaps;
@@ -8,8 +8,8 @@ using UnityEngine.SceneManagement;
 public class CountdownTimer : MonoBehaviour
 {
     public TextMeshProUGUI countdownText;  // Campo para el objeto de texto en UI
-    public float countdownTime = 60f;      // Tiempo de cuenta atrás inicial
-    private bool isCountingDown = false;   // Estado de la cuenta atrás
+    public float countdownTime = 100f;      // Tiempo de cuenta atrï¿½s inicial
+    private bool isCountingDown = false;   // Estado de la cuenta atrï¿½s
 
     void Start()
     {
@@ -20,14 +20,14 @@ public class CountdownTimer : MonoBehaviour
     {
         countdownTime = time;
         isCountingDown = true;
-        countdownText.gameObject.SetActive(true); // Muestra el texto de cuenta atrás
+        countdownText.gameObject.SetActive(true); // Muestra el texto de cuenta atrï¿½s
         StartCoroutine(UpdateCountdown());
     }
 
     public void StopCountdown()
     {
         isCountingDown = false;
-        countdownText.gameObject.SetActive(false); // Oculta el texto cuando termina la cuenta atrás
+        countdownText.gameObject.SetActive(false); // Oculta el texto cuando termina la cuenta atrï¿½s
     }
 
     private IEnumerator UpdateCountdown()
@@ -39,7 +39,7 @@ public class CountdownTimer : MonoBehaviour
             yield return null;
         }
 
-        // Cuando el tiempo se agote, detén la cuenta atrás
+        // Cuando el tiempo se agote, detï¿½n la cuenta atrï¿½s
         StopCountdown();
     }
 }
