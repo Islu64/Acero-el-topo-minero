@@ -2585,7 +2585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4aa737bba6be534387ed9f040471eec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  countdownTime: 50
+  countdownTime: 100
 --- !u!60 &2054939455
 PolygonCollider2D:
   m_ObjectHideFlags: 0

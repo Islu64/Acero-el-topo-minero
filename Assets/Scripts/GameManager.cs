@@ -10,11 +10,13 @@ public class GameManager : MonoBehaviour
     public float countdownTime = 100f;         // Tiempo total de cuenta atr�s
     public TextMeshProUGUI countdownText;     // Texto de la cuenta atr�s en UI
     public ScreenFlash screenFlash;           // Referencia al script ScreenFlash
-
+    public Player player;
     private bool isCountingDown = false;
 
+    AudioManager audioManager;
     void Awake()
     {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
         // Asegura que solo haya una instancia de GameManager
         if (instance == null)
         {
@@ -84,7 +86,14 @@ public class GameManager : MonoBehaviour
         if (countdownTime <= 0)
         {
             StopCountdown();
-            LoadGameOverScene(); // Carga la escena "Acero"
+            audioManager.PlayMusic(audioManager.mainTheme);
+            Player.reinicio = true;
+            PlayerPrefs.SetInt("HP", 3);
+            player = GameObject.Find("Acero").GetComponent<Player>();
+            Player.Monedas = 0;
+            SceneManager.LoadScene("Acero");
+            player.ReiniciarPos();
+            Time.timeScale = 1f;
         }
     }
 
