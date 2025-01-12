@@ -74,6 +74,8 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
+        Monedas = 0;
+        
         if (!PlayerPrefs.HasKey("InitialPositionX") || !PlayerPrefs.HasKey("InitialPositionY") || !PlayerPrefs.HasKey("InitialPositionZ"))
         {
             // Guardar la primera posición inicial si no está guardada

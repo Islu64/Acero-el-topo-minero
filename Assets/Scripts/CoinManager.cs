@@ -36,6 +36,8 @@ public class CoinManager : MonoBehaviour
             // Asignamos las referencias de los objetos UI cuando la escena se cargue
             coinText = GameObject.Find("CoinText").GetComponent<TextMeshProUGUI>();
         }
+        
+        UpdateCoinText();
     }
     public void AddCoin(int cantCoins)
     {
