@@ -654,7 +654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d7e578b56d36fd428de2b9bf0f9f422, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneWithDiamond: Oreca
+  sceneWithDiamond: AceroAlReves
   sceneWithoutDiamond: Acero
   doorID: 1
 --- !u!60 &432634768
@@ -1979,7 +1979,7 @@ Transform:
   m_GameObject: {fileID: 1740986740}
   serializedVersion: 2
   m_LocalRotation: {x: 0.050976634, y: 0.0059922957, z: -0.00030566947, w: 0.9986819}
-  m_LocalPosition: {x: 176.48247, y: -2.0985713, z: -9.794587}
+  m_LocalPosition: {x: 2.175456, y: -2.159571, z: -9.794587}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
