@@ -91,7 +91,7 @@ public class Player : MonoBehaviour
             float z = PlayerPrefs.GetFloat("InitialPositionZ");
             posicionInicial = new Vector3(x, y, z);
         }
-        
+
 
         rigid = GetComponent<Rigidbody2D>();
         tilemap = FindObjectOfType<Tilemap>();
@@ -100,7 +100,7 @@ public class Player : MonoBehaviour
         canShoot = true; // ahora puede disparar!!
 
 
-        
+
         ActualizarCorazones();
         animator = GetComponentInChildren<Animator>();
         animator.SetBool("Andando", false);
