@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
             Player.reinicio = true;
             PlayerPrefs.SetInt("HP", 3);
             player = GameObject.Find("Acero").GetComponent<Player>();
-            Player.Monedas = 0;
+            PlayerPrefs.SetInt("Monedas", 0);
             SceneManager.LoadScene("Acero");
             player.ReiniciarPos();
             Time.timeScale = 1f;

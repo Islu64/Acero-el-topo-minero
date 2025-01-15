@@ -41,13 +41,15 @@ public class CoinManager : MonoBehaviour
     }
     public void AddCoin(int cantCoins)
     {
-        Player.Monedas += cantCoins;
+        int monedas = PlayerPrefs.GetInt("Monedas");
+        monedas += cantCoins;
+        PlayerPrefs.SetInt("Monedas", monedas);
         UpdateCoinText();
     }
 
     private void UpdateCoinText()
     {
         if (coinText != null)
-            coinText.text = "" + Player.Monedas;
+            coinText.text = "" + PlayerPrefs.GetInt("Monedas");
     }
 }

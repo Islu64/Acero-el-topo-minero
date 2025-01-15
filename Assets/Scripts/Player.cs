@@ -8,7 +8,6 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     public Rigidbody2D rigid;
-    public static int Monedas = 0; //Variable que lleva la cuenta de las monedas
     public static bool invencibletemp = false; //Variable que controla si el jugador es invencible o no
     public static bool invencible = false; //Variable que controla si el jugador es invencible o no
     public static bool auto = false; //Variable de control del modo de acciones automatico
@@ -75,8 +74,10 @@ public class Player : MonoBehaviour
     }
     void Start()
     {
-        Monedas = 0;
-
+        if (!PlayerPrefs.HasKey("Monedas"))
+        {
+            PlayerPrefs.SetInt("Monedas", 0);
+        }
         if (!PlayerPrefs.HasKey("InitialPositionX") || !PlayerPrefs.HasKey("InitialPositionY") || !PlayerPrefs.HasKey("InitialPositionZ"))
         {
             // Guardar la primera posición inicial si no está guardada
@@ -240,7 +241,7 @@ public class Player : MonoBehaviour
         if (direccion != Vector2.zero)
         {
             // Calculamos la posición del raycast
-            Vector3 raycastPosition = transform.position + (Vector3)direccion * distanciaCavar;
+            Vector3 raycastPosition = transform.position + (Vector3)direccion * distanciaCavar *0.8f;
             // Convertimos la posición a la celda en el tilemap
             Vector3Int cellPosition = tilemap.WorldToCell(raycastPosition);
 
@@ -435,7 +436,7 @@ public class Player : MonoBehaviour
                 break;
             case 0:
                 PlayerPrefs.SetInt("HP", 3); // Reinicia la vida a 3
-                Monedas = 0;
+                PlayerPrefs.SetInt("Monedas", 0);
                 Die();
                 break;
         }
@@ -529,7 +530,7 @@ public class Player : MonoBehaviour
                     GameOver = hijoGameOver.gameObject;
                 }
             }
-            
+
             if (GameOver == null)
             {
                 Debug.LogError("No se encontró la pantalla de Game Over dentro del Canvas");

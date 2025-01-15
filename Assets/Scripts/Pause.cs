@@ -49,6 +49,13 @@ public class Pause : MonoBehaviour
     {
         if (estado == Estados.Juego)
         {
+            if(PlayerPrefs.GetInt("Mute") == 1){
+                botonSonidoOn.SetActive(false);
+                botonSonidoOff.SetActive(true);
+            }else{
+                botonSonidoOn.SetActive(true);
+                botonSonidoOff.SetActive(false);
+            }
             audioManager.musicSource.Pause();
             escPushed = true;
             estado = Estados.Pausa;
@@ -78,7 +85,7 @@ public class Pause : MonoBehaviour
         escPushed = false;
         Destroy(gameObject);
         player = GameObject.Find("Acero").GetComponent<Player>();
-        Player.Monedas = 0;
+        PlayerPrefs.SetInt("Monedas", 0);
         SceneManager.LoadScene("Acero");
         player.ReiniciarPos();
         Time.timeScale = 1f;
@@ -127,12 +134,14 @@ public class Pause : MonoBehaviour
     }
 
     public void Mutear(){
+        PlayerPrefs.SetInt("Mute", 1);
         botonSonidoOn.SetActive(false);
         botonSonidoOff.SetActive(true);
         AudioManager.instance.ToggleMute();
     }
     public void DesMutear()
     {
+        PlayerPrefs.SetInt("Mute", 0);
         botonSonidoOn.SetActive(true);
         botonSonidoOff.SetActive(false);
         AudioManager.instance.ToggleMute();

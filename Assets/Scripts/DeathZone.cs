@@ -14,9 +14,7 @@ public class DeathZone : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Player player = collision.gameObject.GetComponent<Player>();
-            player.PerderVida();
-            // Reinicia la escena actual
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            player.Die();
         }
     }
 }

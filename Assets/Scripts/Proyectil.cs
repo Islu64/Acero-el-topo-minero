@@ -21,7 +21,7 @@ private IEnumerator ActivarCollider(float delay)
 
 private void OnCollisionEnter2D(Collision2D collision)
 {
-    if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Enemy"))
+    if (!collision.gameObject.CompareTag("Player"))
     {
         Destroy(gameObject);
     }
