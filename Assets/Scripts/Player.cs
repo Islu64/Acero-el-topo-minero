@@ -517,6 +517,8 @@ public class Player : MonoBehaviour
     {
         audioManager.musicSource.Stop();
         audioManager.PlaySFX(audioManager.gameOver);
+        GameManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        gameManager.StopCountdown();
         if (GameOver == null)
         {
             // Encuentra el Canvas

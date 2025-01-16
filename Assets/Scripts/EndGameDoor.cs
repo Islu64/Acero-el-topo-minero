@@ -4,7 +4,7 @@ using TMPro; // Si est�s usando TextMeshPro
 
 public class EndGameDoor : MonoBehaviour
 {
-    public TextMeshProUGUI endGameText; // Texto de fin del juego en UI
+    public GameObject endGameText; // Texto de fin del juego en UI
 
     private bool isEndGame = false; // Estado que indica si el juego ha terminado
 
@@ -13,6 +13,25 @@ public class EndGameDoor : MonoBehaviour
         // Aseg�rate de que el texto est� oculto al inicio
         if (endGameText != null)
         {
+            endGameText.gameObject.SetActive(false);
+        }else{
+            // Encuentra el Canvas
+            GameObject canvas = GameObject.Find("Canvas");
+            if (canvas != null)
+            {
+                // Busca el texto final como hijo del Canvas
+                Transform hijoEndText = canvas.transform.Find("EndText");
+                if (hijoEndText != null)
+                {
+                    endGameText = hijoEndText.gameObject;
+                }
+            }
+
+            if (endGameText == null)
+            {
+                Debug.LogError("No se encontró la pantalla de Game Over dentro del Canvas");
+                return;
+            }
             endGameText.gameObject.SetActive(false);
         }
     }
@@ -44,6 +63,7 @@ public class EndGameDoor : MonoBehaviour
             endGameText.gameObject.SetActive(true);
         }
         isEndGame = true;
+        Time.timeScale = 0f;
     }
 
     private void QuitGame()
